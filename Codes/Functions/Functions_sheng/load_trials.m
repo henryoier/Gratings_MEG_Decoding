@@ -85,18 +85,18 @@ filesB = [];
 
 for c = 1:n_conditions
     if strcmp(SensorMode([1:3]),'sco')
-        fA = dir([brainstorm_db '/' subject '/' conditionsA{c} '/matrix_scout_*.mat']);
+        fA = dir([brainstorm_db '/' subject '/data/' conditionsA{c} '/matrix_scout_*.mat']);
     else
-        fA = dir([brainstorm_db '/' subject '/' conditionsA{c} '/*trial*.mat']);
+        fA = dir([brainstorm_db '/' subject '/data/' conditionsA{c} '/*trial*.mat']);
     end
     
     %if (~size(fA,1)) error('myError: No files while loading trials A'); end
     
     if(flag_B)
         if strcmp(SensorMode([1:3]),'sco')
-            fB = dir([brainstorm_db '/' subject '/' conditionsB{c} '/matrix_scout_*.mat']);
+            fB = dir([brainstorm_db '/' subject '/data/' conditionsB{c} '/matrix_scout_*.mat']);
         else
-            fB = dir([brainstorm_db '/' subject '/' conditionsB{c} '/*trial*.mat']);
+            fB = dir([brainstorm_db '/' subject '/data/' conditionsB{c} '/*trial*.mat']);
         end
     end
     
@@ -115,9 +115,9 @@ for c = 1:n_conditions
     end
     
     for i = 1:n(c)
-        fA(i).dir = [brainstorm_db '/' subject '/' conditionsA{c} '/'];
+        fA(i).dir = [brainstorm_db '/' subject '/data/' conditionsA{c} '/'];
         if(flag_B)
-            fB(i).dir = [brainstorm_db '/' subject '/' conditionsB{c} '/']; 
+            fB(i).dir = [brainstorm_db '/' subject '/data/' conditionsB{c} '/']; 
         end
     end
     filesA = [filesA ; fA(1:n(c))];

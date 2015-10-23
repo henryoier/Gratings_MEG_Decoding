@@ -10,7 +10,7 @@ function RStep0A_RhythmAnalysis(in_subject)
 %-------------------------------------------------
 %   ouput:
 %       mat files   -   time-frequency power
-%                       frequency * time = 100 Hz * 1901 ms;
+%                           frequency * time = 100 Hz * 1901 ms;
 %
 %==================================================
 %   example:
@@ -27,11 +27,10 @@ function RStep0A_RhythmAnalysis(in_subject)
 
 clc;
 addpath(genpath('Functions'));
-results_location = ['Results/sheng/Fig0_Timefreq'];
+results_location = ['Results/sheng/Fig2_Timefreq'];
 ProjectName = 'sheng'; 
 RhythmMode = '1_100'; 
-% conditions = {{'1'}};
-conditions = {{'1'} {'2'} {'3'} {'4'} {'5'} {'6'}};
+conditions = {{'1'}};  % {{'1'} {'2'} {'3'} {'4'} {'5'} {'6'}}
 ndx_trials = []; % Index of trials while reading parts of trials; Read all trials if it is '[]';
 
 for i_subject = in_subject
@@ -41,7 +40,6 @@ for i_subject = in_subject
     % Different subject has different sensor with strongest response.
     SubjectReferToSensor = {'','','MEG2113','MEG2011','MEG2032','MEG2113','MEG2123','MEG2023','MEG1912','MEG1923'};
     SubjectReferToSensor = [SubjectReferToSensor 'MEG1923','MEG1923','MEG2032','MEG2032','MEG2342','MEG2321'];
-    %SensorMode = 'all';
     SensorMode = SubjectReferToSensor{i_subject};    % 'all' 'single' 'test' 'batch'
     
     clusterflag = 0; % run in local computer, not in openmind computer cluster
