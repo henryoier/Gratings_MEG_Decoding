@@ -1,24 +1,33 @@
-% RStep0B_RhythmAnalysis_CombineSubjects
-% This function works after running RStep0A
-% This script has two usages:
-% 1. Combine subjects;
-%       output: mat files
-% 2. Plot time-frequency power map;
-%       output: figures
+%   RStep0B_RhythmAnalysis_CombineSubjects
+%
+%   This function works after running RStep0A 
+%================================================
+%   usage:
+%       1. Combine subjects;
+%           output  -   mat files
+%       2. Plot time-frequency power map;
+%           output  -   figures
+%================================================
+%   Adapted from Mingtong
+%
+%   Version 1.0 -- Oct./2015
+%
+%   written by Sheng Qin(shengqin [AT] mit (DOT) edu)
+%
 
 clear; clc; close all;
-ProjectName = 'fang02';
+ProjectName = 'sheng';
 
-flag_combine = 0;  % flag '1': combine subjects and save mat;
-flag_plot = 1;      % flag '1': plot time-frequency-power;
+flag_combine = 1;  % flag '1': combine subjects and save mat;
+flag_plot = 0;      % flag '1': plot time-frequency-power;
 flag_save_jpg = 1;
 
 files_number = 14; % how many files to be loaded/combined. (To make sure the script runs correctly)
-in_condition = [1:1];   % [1:6]: 1~6 conditions will be analyzed
-results_location = [pwd 'Results\fang02\Fig2_Timefreq'];
+in_condition = [1:6];   % [1:6]: 1~6 conditions will be analyzed
+results_location = ['/dataslow/sheng/Project of Sheng/Results/sheng/Fig0_Timefreq'];
 
 % for i_subject = [0]  SubjectName = '14gratings';
-for i_subject = [12:12]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; 
+for i_subject = [3:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; 
     
     for i_condition = in_condition
         filename_tf = [ 'Timefreq_' SubjectName '_cond' num2str(i_condition) '_1-100Hz' ];
@@ -26,7 +35,7 @@ for i_subject = [12:12]  SubjectName = ['grating' num2str(i_subject, '%0.2d')];
 
         %% combine subjects
         if flag_combine
-            if strcmp(SubjectName([1:7]),'grating') error('Wrong subject name!'); end
+            if ~strcmp(SubjectName([1:7]),'grating') error('Wrong subject name!'); end
             files = dir([results_location '/mat/Timefreq_grating*_cond' num2str(i_condition) '_1-100Hz_MEG*']);
             disp(['Condition: ' num2str(i_condition) ' , Files: ' num2str(length(files)) ]);
             if length(files)==files_number
@@ -80,7 +89,7 @@ for i_subject = [12:12]  SubjectName = ['grating' num2str(i_subject, '%0.2d')];
 %             cmax = 311;
             h.evoked_percentage = RStep0Z_subfunction_plot(Timefreq.evoked_percentage,Time,Freqs,flag_save_jpg,title_text,cmax);
             if flag_save_jpg
-                print(h.evoked_percentage,[results_location '/' filename_tf '_evoked___max' num2str(cmax,3) '.jpg'],'-djpeg','-r0');
+                print(h.evoked_percentage,[results_location '/fig/' filename_tf '_evoked___max' num2str(cmax,3) '.jpg'],'-djpeg','-r0');
                 close(h.evoked_percentage);
             end
             
@@ -90,7 +99,7 @@ for i_subject = [12:12]  SubjectName = ['grating' num2str(i_subject, '%0.2d')];
 %             cmax = 2.1;
             h.induced_percentage = RStep0Z_subfunction_plot(Timefreq.induced_percentage,Time,Freqs,flag_save_jpg,title_text,cmax);
             if flag_save_jpg
-                print(h.induced_percentage,[results_location '/' filename_tf '_induced___max' num2str(cmax,3) '.jpg'],'-djpeg','-r0');
+                print(h.induced_percentage,[results_location '/fig/' filename_tf '_induced___max' num2str(cmax,3) '.jpg'],'-djpeg','-r0');
                 close(h.induced_percentage);
             end
             
@@ -100,7 +109,7 @@ for i_subject = [12:12]  SubjectName = ['grating' num2str(i_subject, '%0.2d')];
 %             cmax = 2.5;
             h.total_percentage = RStep0Z_subfunction_plot(Timefreq.total_percentage,Time,Freqs,flag_save_jpg,title_text,cmax);
             if flag_save_jpg
-                print(h.total_percentage,[results_location '/' filename_tf '_total___max' num2str(cmax,3) '.jpg'],'-djpeg','-r0');
+                print(h.total_percentage,[results_location '/fig/' filename_tf '_total___max' num2str(cmax,3) '.jpg'],'-djpeg','-r0');
                 close(h.total_percentage);
             end
             
