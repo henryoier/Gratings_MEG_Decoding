@@ -63,5 +63,5 @@ if strfind(data_type,'GRADr74spaceopt')
     ndx = sort(ndx(randperm(102,74))); %select only 74 sensors randomly
     channel_index = ndx; %do not keep any other values (aka MAG)
 end
-disp(channel_index);
+
 channel_index = unique(channel_index);
