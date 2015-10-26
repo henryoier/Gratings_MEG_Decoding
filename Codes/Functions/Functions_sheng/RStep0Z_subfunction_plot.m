@@ -29,13 +29,15 @@ if (flag_save_jpg)
     text_size = 25;
 end
 
-imagesc(Time,Freqs,Timefreq);colorbar;
+imagesc(Time,Freqs,Timefreq);
+colorbar;
+colormap(jet);
 set(gca,'YDir','normal');
 line('XData', [0 0], 'YData', [min(Freqs),max(Freqs)], 'LineStyle', '-', 'LineWidth', 1, 'Color',[0.5 0.5 0.5])
 line('XData', [0.8 0.8], 'YData', [min(Freqs),max(Freqs)], 'LineStyle', '-', 'LineWidth', 1, 'Color',[0.5 0.5 0.5])
 set(gca,'FontSize',13);
 
-caxis([-cmax,cmax]);
+%caxis([-cmax,cmax]);
 
 title(title_text, 'FontSize', text_size)
 set(gca,'FontSize',text_size);

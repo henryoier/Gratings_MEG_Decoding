@@ -18,8 +18,8 @@
 clear; clc; close all;
 ProjectName = 'sheng';
 
-flag_combine = 1;  % flag '1': combine subjects and save mat;
-flag_plot = 0;      % flag '1': plot time-frequency-power;
+flag_combine = 0;  % flag '1': combine subjects and save mat;
+flag_plot = 1;      % flag '1': plot time-frequency-power;
 flag_save_jpg = 1;
 
 files_number = 14; % how many files to be loaded/combined. (To make sure the script runs correctly)

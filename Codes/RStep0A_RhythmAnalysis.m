@@ -15,7 +15,7 @@ function RStep0A_RhythmAnalysis(in_subject)
 %==================================================
 %   example:
 %
-%   in_subject = [12]; % [3:16]
+%   in_subject = [3:16]
 %
 %===================================================
 %   adapted from Mingtong
@@ -34,6 +34,8 @@ RhythmMode = '1_100';
 conditions = {{'1'} {'2'} {'3'} {'4'} {'5'} {'6'}};
 ndx_trials = []; % Index of trials while reading parts of trials; Read all trials if it is '[]';
 
+startmatlabpool(48); %parallel computation
+
 for i_subject = in_subject
     
     SubjectName = ['grating' num2str(i_subject,'%.2d')];
@@ -41,15 +43,15 @@ for i_subject = in_subject
     % Different subject has different sensor with strongest response.
     SubjectReferToSensor = {'','','MEG2113','MEG2011','MEG2032','MEG2113','MEG2123','MEG2023','MEG1912','MEG1923'};
     SubjectReferToSensor = [SubjectReferToSensor 'MEG1923','MEG1923','MEG2032','MEG2032','MEG2342','MEG2321'];
-    %SensorMode = 'all';
-    SensorMode = SubjectReferToSensor{i_subject};    % 'all' 'single' 'test' 'batch'
+    SensorMode = 'all';
+    %SensorMode = SubjectReferToSensor{i_subject};    % 'all' 'single' 'test' 'batch'
     
     clusterflag = 0; % run in local computer, not in openmind computer cluster
     parameters_analysis; % ctrl+D to open this '.m' file
     param.ndx_trials = ndx_trials; % save all parameters in results
     
     for i_condition = 1:length(conditions)
-        
+
         fprintf(1, '\n\n'); display(['Subject: ' SubjectName ' , Condition: ' num2str(i_condition) ]);
         Freqs = OPTIONS.Freqs;
         HZ = [num2str(min(OPTIONS.Freqs)) '-' num2str(max(OPTIONS.Freqs)) 'Hz'];
@@ -74,6 +76,7 @@ for i_subject = in_subject
         end
         
         %% evoked -- compute trial_avg, TF_evoked = TF(trial_avg)
+        
         fprintf(1, '\n'); disp('Timefreq Evoked start!');
         evoked_sum = zeros(size(trials{1}));
         for i_trial = 1:n_trials
@@ -131,4 +134,6 @@ for i_subject = in_subject
         save( [results_location '/mat/' filename_tf ],'Timefreq','Time','Freqs','param');
     end
 end
+
+closematlabpool;
 disp('All finished!');

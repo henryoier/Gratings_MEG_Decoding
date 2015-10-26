@@ -1,10 +1,12 @@
-function RStep1_RhythmClassifierApply(ProjectName,SubjectName,RhythmMode,SensorMode,iitt,permutations,group,clusterflag)
+function RStep1_RhythmClassifierApply()
+%function RStep1_RhythmClassifierApply(ProjectName,SubjectName,RhythmMode,SensorMode,iitt,permutations,group,clusterflag)
 % SVM Decoding, adapted from Mingtong, RM Cichy & D Pantazis
 %
 % RStep1_RhythmClassifierApply(ProjectName,SubjectName,RhythmMode,SensorMode,iitt,permutations,group,clusterflag) 
 % 
+%===================================================================
 %   Input:
-%       ProjectName     -   default is fang02
+%       ProjectName     -   default is sheng
 %       SubjectName     -   grating03 - grating 16 
 %       RhythmMode      -   decode based on evoked signals or frequency signals
 %       SensorMode      -   analyze data based on sensors (all/several/individual) or source level (scouts)
@@ -13,13 +15,15 @@ function RStep1_RhythmClassifierApply(ProjectName,SubjectName,RhythmMode,SensorM
 %       permutations    -   SVM parameter
 %       group           -   split all pairs into several groups, then run each group separately
 %       clusterflag     -   run scripts locally or OPENMIND computer cluster
-%   
+%
+%--------------------------------------------------------------------
 %   Output:
 %       mat files       -   decoding accuracy & SVM weight distribution & parameters
 %       AccuracyMEG     -   decoding accuracy, condition * condition * time = 6 * 6 * 1901ms
 %                           / AccuracyIITT: decoding accuracy, condition * condition * time * time = 6 * 6 * 1901ms * 1901ms
 %       Weight          -   SVM parameter, condition * condition * time (* time) = 6 * 6 * 1901ms (* 1901ms)
-%   
+% 
+%====================================================================
 %   Version 2.0 -- Oct./2015
 %   
 %   Writtlen by Sheng Qin(shengqin [AT] mit (DOT) edu)
@@ -27,18 +31,19 @@ function RStep1_RhythmClassifierApply(ProjectName,SubjectName,RhythmMode,SensorM
 
 clear; clc
 ProjectName = 'sheng';
-SubjectName = 'grating03';  % 'grating03 to grating 05'
+SubjectName = {'grating03'};  % 'grating03 to grating 16'
 RhythmMode = 'evoked';      % 'evoked' 'vectorlow' 'vectorhigh' 'single30'
 SensorMode = 'all';         % 'all' 'test7' 'batch' 'scouts'
 iitt = 'ii';                % 'ii' 'iitt' --- image-image-time-time mode off/on
 permutations = 'p10';       % 'p10'
-group = 'grouptest';    	% 'groupall' 'grouptest' 'group1'
+group = 'groupall';    	% 'groupall' 'grouptest' 'group1'
 clusterflag = '0';          % '0' for single pc, '1' for cluster
 
 addpath(genpath('Functions')); % add path of functions
 
 param.trial_bin_size = 87;  % SVM parameter, group size
 
+%startmatlabpool(48);
 %% parameters
 parameters_classifer;
 parameters_analysis;
@@ -89,6 +94,7 @@ end
 disp('All finished!');
 
 toc
+%closematlabpool;
 if clusterflag
     exit;
 end
