@@ -1,21 +1,10 @@
-function RStep1_RhythmClassifierApply()
-%function RStep1_RhythmClassifierApply(ProjectName,SubjectName,RhythmMode,SensorMode,iitt,permutations,group,clusterflag)
-% SVM Decoding, adapted from Mingtong, RM Cichy & D Pantazis
+function RStep1_RhythmClassifierApplyParallel(SubjectNum)
+%function RStep1_RhythmClassifierApplyParallel(SubjectNum)
+% SVM Decoding, parallel part
 %
-% RStep1_RhythmClassifierApply(ProjectName,SubjectName,RhythmMode,SensorMode,iitt,permutations,group,clusterflag) 
-% 
 %===================================================================
 %   Input:
-%       ProjectName     -   default is sheng
-%       SubjectName     -   grating03 - grating 16 
-%       RhythmMode      -   decode based on evoked signals or frequency signals
-%       SensorMode      -   analyze data based on sensors (all/several/individual) or source level (scouts)
-%       iitt            -   'ii', outputs image(condition)-image(condition) decoding accuracy;
-%                           'iitt', outputs image-image-time-time decoding accuracy
-%       permutations    -   SVM parameter
-%       group           -   split all pairs into several groups, then run each group separately
-%       clusterflag     -   run scripts locally or OPENMIND computer cluster
-%
+%       SubjectNum      -   subject number(3 - 16)
 %--------------------------------------------------------------------
 %   Output:
 %       mat files       -   decoding accuracy & SVM weight distribution & parameters
@@ -29,19 +18,27 @@ function RStep1_RhythmClassifierApply()
 %   Writtlen by Sheng Qin(shengqin [AT] mit (DOT) edu)
 %
 
-clear; clc
 ProjectName = 'sheng';
-SubjectNames = 'grating03';  % 'grating03 to grating 16'
 RhythmMode = 'evoked';      % 'evoked' 'vectorlow' 'vectorhigh' 'single30'
 SensorMode = 'all';         % 'all' 'test7' 'batch' 'scouts'
 iitt = 'ii';                % 'ii' 'iitt' --- image-image-time-time mode off/on
 permutations = 'p10';       % 'p10'
 group = 'groupall';    	% 'groupall' 'grouptest' 'group1'
-clusterflag = '0';          % '0' for single pc, '1' for cluster
+clusterflag = '0';
 
 addpath(genpath('Functions')); % add path of functions
 
 param.trial_bin_size = 87;  % SVM parameter, group size
+
+if SubjectNum < 10
+    SubjectName = strcat('grating0', num2str(SubjectNum));
+else
+    SubjectName = strcat('grating', num2str(SubjectNum));
+end
+
+%% parameters
+parameters_classifer;
+parameters_analysis;
 
 switch ProjectName
     case {'sheng'}
@@ -53,12 +50,8 @@ switch ProjectName
         if strcmp(group,'grouptest'); CONDA = 2;         end
 end
 
-%% parameters
-parameters_classifer;
-parameters_analysis;
-
 %% Run SVM clissifer
-tic;
+tic
 disp(['Subject = ' SubjectName]);
 for condA = CONDA
     for condB = 1:(condA-1)
@@ -90,15 +83,6 @@ if(strcmp(iitt,'iitt'))
     Weight(max(CONDA),max(CONDA),1,1) = 0;
     save(filename,'AccuracyIITT','Weight','param');
 end
-    
 disp('All finished!');
-toc
-closematlabpool;
 
-%% Parallel computing
-startmatlabpool;
-parfor i = 3:16
-    RStep1_RhythmClassifierApplyParallel(i);
-end
-closematlabpool;
-disp('All finished!');
+toc

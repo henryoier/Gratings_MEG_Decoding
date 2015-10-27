@@ -59,8 +59,8 @@ flag_B = str2num(conditionsB{1}); % whether to load the second condition trials
 if ~strcmp(SensorMode([1:3]),'sco') % if it is not scout(source level)
     
     % get channel index (assume common channel structure per subject)
-    disp(brainstorm_db);
-    channelfile = [brainstorm_db '/' subject '/@default_study/channel_vectorview306_acc1.mat'];
+    
+    channelfile = [brainstorm_db, '/', subject, '/@default_study/channel_vectorview306_acc1.mat'];
     file_channel = load(channelfile);
     channel_index = get_channel_index(file_channel,data_type);
     
