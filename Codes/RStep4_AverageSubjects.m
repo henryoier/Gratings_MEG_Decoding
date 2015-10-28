@@ -1,10 +1,10 @@
-function RStep7_AverageSubjectsPost(RhythmMode,FileType,clusterflag)
+function RStep4_AverageSubjectsPost(RhythmMode,FileType,clusterflag)
 % RStep7_AverageSubjectsPost('single','TFA','0')
 % % average subjects and do statistical analysis
 
 % % for example
 % clear;clc;
-RhythmMode = 'evoked'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle' 'vectorlow'
+RhythmMode = 'evectorhigh'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle' 'vectorlow'
 FileType = 'II';
 clusterflag = '0';
 
@@ -27,8 +27,8 @@ if clusterflag
     if (length(FileType)==2) file_location = ['/om/user/mfang/RhythmClassifier/TT/Mat_' RhythmMode  ]; end
     if (length(FileType)==3) file_location = ['/om/user/mfang/RhythmClassifier/TT/Mat0_TFA_' RhythmMode  ]; end
 else
-    if (length(FileType)==2) file_location = ['/dataslow/sheng/Project of Sheng/Results/sheng/' RhythmMode  ]; end
-    if (length(FileType)==3) file_location = ['/dataslow/sheng/Project of Sheng/Results/sheng/' RhythmMode  ]; end
+    if (length(FileType)==2) file_location = ['/dataslow/sheng/Project of Sheng/Results/sheng/Mat_' RhythmMode  ]; end
+    if (length(FileType)==3) file_location = ['/dataslow/sheng/Project of Sheng/Results/sheng/Mat_' RhythmMode  ]; end
 end
 
 

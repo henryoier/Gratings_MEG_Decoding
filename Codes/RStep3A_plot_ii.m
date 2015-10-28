@@ -1,11 +1,11 @@
-% function RStep6A_plot_ii(RhythmMode)
+% function RStep3A_plot_ii(RhythmMode)
 % % plot decoding accuracy
 
 % cd C:\Users\Mingtong\OneDrive\Mingtong\RhythmClassifier
 clear;clc; close all;
 addpath(genpath('Functions'));
 ProjectName = 'sheng';   %%%%%
-RhythmMode = 'evoked'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
+RhythmMode = 'evectorhigh'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
 SensorMode = 'all'; % 'batch' 'all' 'scouts'
 iitt = 'iitt';
 
@@ -28,16 +28,17 @@ for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 20; YMAX = 100; YMIN_
     
     %% load file
     display(['Subject: ' SubjectName]);
-    file_location = [pwd '/Results/' ProjectName '/evoked/'];
-    mat_location = [ file_location ]; % [ file_location '\Mat_' RhythmMode]
+    file_location = [pwd '/Results/' ProjectName];
+    mat_location = [ file_location '/Mat_' RhythmMode ]; 
+    fig_location = [ file_location '/Fig_' RhythmMode]
 
     if strcmp(iitt, 'ii')
         file_load = [ 'ACCY_' SubjectName '_' RhythmMode '_' SensorMode];
-        jpg_file_name = [ file_location '/ACCY_' SubjectName '_' RhythmMode '_' SensorMode '___'];
+        jpg_file_name = [ fig_location '/ACCY_' SubjectName '_' RhythmMode '_' SensorMode '___'];
 %         jpg_file_name = [ file_location '/Fig3_IITT/Fig_' RhythmMode '/ACCY_' SubjectName '_' RhythmMode '_' SensorMode '___'];
     else
         file_load = [ 'II_' SubjectName '_' RhythmMode '_' SensorMode];
-        jpg_file_name = [ file_location '/IITT_' SubjectName '_' RhythmMode '_' SensorMode '___'];
+        jpg_file_name = [ fig_location '/IITT_' SubjectName '_' RhythmMode '_' SensorMode '___'];
 %         jpg_file_name = [ file_location '/Fig3_IITT/Fig_' RhythmMode '/IITT_' SubjectName '_' RhythmMode '_' SensorMode '___'];
     end
     load( [mat_location '/' file_load]);
