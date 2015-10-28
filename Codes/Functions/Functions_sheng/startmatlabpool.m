@@ -1,9 +1,19 @@
 function [] = startmatlabpool(size)
+% Start matlab parallel computing pool with input size
+% 
+%==========================================================================
+%   Input:
+%       size    -   parallel cpu numbers requested
+%--------------------------------------------------------------------------
+%   Writtlen by Sheng Qin(shengqin [AT] mit (DOT) edu)
+%   
+%   Version 1.0 Oct. 2015
+%
 
-delete(gcp('nocreate'));
-p = gcp('nocreate');
+delete(gcp('nocreate'));    % Delete pool if existed
+p = gcp('nocreate');        % Request pool
 
-if isempty(p)
+if isempty(p)             
     poolsize = 0;
 else
     poolsize = p.NumWorker;

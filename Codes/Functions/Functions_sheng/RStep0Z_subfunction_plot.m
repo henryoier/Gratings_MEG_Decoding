@@ -13,7 +13,7 @@ function h = RStep0_RhythmAnalysis_plot(Timefreq,Time,Freqs,flag_save_jpg,title_
 %                           eg:max(max(abs(Timefreq.evoked_percentage)))
 %-----------------------------------------------------------
 %   Output:
-%       h               -   Time-Frequence-Power Image
+%        h               -   Time-Frequence-Power Image
 %===========================================================
 %   
 %   Version 1.0 -- Oct. 2015 

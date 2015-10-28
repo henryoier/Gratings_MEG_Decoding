@@ -1,5 +1,4 @@
 function [channel_index] = get_channel_index(file_channel,data_type)
-%   [DESCRIPTION HERE]
 %
 %   [channel_index] = get_channel_index(file_channel,data_type)
 %
@@ -45,13 +44,13 @@ if strfind(data_type,'EEG')
 end
 if strfind(data_type,'MAGr74')
     ndx = find_channels(file_channel.Channel,'MAG');
-    ndx = sort(ndx(randperm(102,74))); %select only 74 sensors randomly
-    channel_index = ndx; %do not keep any other values (aka MAG)
+    ndx = sort(ndx(randperm(102,74)));          %select only 74 sensors randomly
+    channel_index = ndx;                        %do not keep any other values (aka MAG)
 end
 if strfind(data_type,'GRADr74')
     ndx = find_channels(file_channel.Channel,'GRAD');
-    ndx = sort(ndx(randperm(204,74))); %select only 74 sensors randomly
-    channel_index = ndx %do not keep any other values (aka MAG)
+    ndx = sort(ndx(randperm(204,74)));          %select only 74 sensors randomly
+    channel_index = ndx                         %do not keep any other values (aka MAG)
 end
 if strfind(data_type,'GRADr74spaceopt')
     ndx = find_channels(file_channel.Channel,'GRAD');
@@ -60,8 +59,8 @@ if strfind(data_type,'GRADr74spaceopt')
     else
         ndx = ndx(2:2:end);
     end
-    ndx = sort(ndx(randperm(102,74))); %select only 74 sensors randomly
-    channel_index = ndx; %do not keep any other values (aka MAG)
+    ndx = sort(ndx(randperm(102,74)));          %select only 74 sensors randomly
+    channel_index = ndx;                        %do not keep any other values (aka MAG)
 end
 
 channel_index = unique(channel_index);
