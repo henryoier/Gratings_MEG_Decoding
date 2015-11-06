@@ -12,13 +12,13 @@ file_location = [ pwd '/Results/' ProjectName ];
 % mat_location = [ file_location '\Mat_' RhythmMode];
 mat_location = [ file_location '/Mat_' RhythmMode ];
 
-flag_save = 0;
+flag_save = 1;
 
 Result = [];
 Baseline = 300;
 
-% for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 40; YMAX = 90;
-for i_subject = [3:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; YMIN = 20; YMAX = 100;
+ for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 40; YMAX = 90;
+%for i_subject = [3:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; YMIN = 20; YMAX = 100;
     
     file_load = [ 'TT_' SubjectName '_' RhythmMode '_' SensorMode cluster_th];
     load( [mat_location '/' file_load]);
@@ -35,7 +35,7 @@ for i_subject = [3:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; Y
     imagesc(Time,Time,TT.mean); colorbar; set(gca,'YDir','normal');
     colormap(jet);
     axis equal; axis([min(Time) max(Time) min(Time) max(Time)])
-    caxis([YMIN YMAX]);
+    %caxis([YMIN YMAX]);
     
     line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
     line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])

@@ -17,24 +17,51 @@ flag_save = 1;
 Result = [];
 Baseline = 300;
 
-% for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 40; YMAX = 90;
-for i_subject = [4:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; YMIN = 20; YMAX = 100;
+Counter = 0;
+
+TT.mean = zeros(1901,1901);
+
+%for i_subject = [0]  SubjectName = '14gratings316'; %YMIN = 40; YMAX = 90;
+for i_subject = [3:16]  
+    SubjectName = ['grating' num2str(i_subject, '%0.2d')]; 
     
     file_load = [ 'II_' SubjectName '_' RhythmMode '_' SensorMode cluster_th];
     load( [mat_location '/' file_load]);
     
-    TT.mean = zeros(1901,1901);
     AccuracyTT = Rhythm.AccyAll.matrix;
-    
-    for time1 = 1:1901
-        for time2 = 1:1901
-            TT.mean(time1, time2) = corr2(squareform(squeeze(AccuracyTT(:,:,time1))), squareform(squeeze(AccuracyTT(:,:,time2))));
-        end
+    Accuracy1 = [];
+    for time = 1:1901
+        Accuracy1 = [Accuracy1; squareform(AccuracyTT(:,:,time))];
     end
     
+    for j_subject = 3:16 
+        
+        %Counter = Counter + 1;
+        
+        disp(['subject ' num2str(i_subject) ' & ' num2str(j_subject)]);
+        
+        SubjectName = ['grating' num2str(j_subject, '%0.2d')];
+        
+        file_load = [ 'II_' SubjectName '_' RhythmMode '_' SensorMode cluster_th];
+        load( [mat_location '/' file_load]);
+
+        AccuracyTT = Rhythm.AccyAll.matrix;
+        Accuracy2 = [];
+        for time = 1:1901
+            Accuracy2 = [Accuracy2; squareform(AccuracyTT(:,:,time))];
+        end
+
+        TempTT = corrcoef([Accuracy1;Accuracy2]'); 
+        TT.mean = TempTT(1:1901,1902:3802);
+    %end
+%end    
+
+    %TT.mean = TT.mean / Counter;
+    save([mat_location 'TT_' num2str(i_subject) '&' num2str(j_subject) '_SubjectsBetween_Correlations.mat'], 'TT');
     
-    jpg_file_name = [ file_location '/Mat_' RhythmMode '/IITT_corr_' file_load([4:end]) '___'];
+    jpg_file_name = [ file_location '/Mat_' RhythmMode '/IITT_corr_' num2str(i_subject) '&' num2str(j_subject) '_SubjectsBetween2___'];
 %     jpg_file_name = [ file_location '/Fig3_IITT/Fig_' RhythmMode '/IITT_' file_load([4:end]) '___'];
+    
     
     %%
     Time = linspace(-0.3, 1.6, 1900);
@@ -48,7 +75,7 @@ for i_subject = [4:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; Y
     line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
     line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
     line('XData', [0.8 0.8], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
-    h_title = title([SubjectName '      ' RhythmMode '      ' SensorMode '      Time-Time'], 'FontSize', 15);
+    h_title = title([num2str(i_subject) '&' num2str(j_subject) 'Time-Time Correlation'], 'FontSize', 15);
     set(gca,'FontSize',15);
     max_accuracy = max(max(TT.mean));
     min_accuracy = min(min(TT.mean));
@@ -94,6 +121,6 @@ for i_subject = [4:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; Y
             close(h);
         end
     end
+    end
 end
-
 
