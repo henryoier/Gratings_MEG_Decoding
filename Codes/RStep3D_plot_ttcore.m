@@ -1,4 +1,4 @@
-% function RStep6B_plot_tt(RhythmMode)
+% function RStep63D_plot_ttcore(RhythmMode)
 % % plot time-time decoding accuracy
 
 clear;clc;close all;
@@ -12,30 +12,37 @@ file_location = [ pwd '/Results/' ProjectName ];
 % mat_location = [ file_location '\Mat_' RhythmMode];
 mat_location = [ file_location '/Mat_' RhythmMode ];
 
-flag_save = 0;
+flag_save = 1;
 
 Result = [];
 Baseline = 300;
 
 % for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 40; YMAX = 90;
-for i_subject = [3:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; YMIN = 20; YMAX = 100;
+for i_subject = [4:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; YMIN = 20; YMAX = 100;
     
-    file_load = [ 'TT_' SubjectName '_' RhythmMode '_' SensorMode cluster_th];
+    file_load = [ 'II_' SubjectName '_' RhythmMode '_' SensorMode cluster_th];
     load( [mat_location '/' file_load]);
-    if strcmp(param.SubjectName([1:7]),'grating')   % if individual subject
-        TT.mean = AccuracyTT;
+    
+    TT.mean = zeros(1901,1901);
+    AccuracyTT = Rhythm.AccyAll.matrix;
+    
+    for time1 = 1:1901
+        for time2 = 1:1901
+            TT.mean(time1, time2) = corr2(squareform(squeeze(AccuracyTT(:,:,time1))), squareform(squeeze(AccuracyTT(:,:,time2))));
+        end
     end
     
-    jpg_file_name = [ file_location '/Mat_' RhythmMode '/IITT_' file_load([4:end]) '___'];
+    
+    jpg_file_name = [ file_location '/Mat_' RhythmMode '/IITT_corr_' file_load([4:end]) '___'];
 %     jpg_file_name = [ file_location '/Fig3_IITT/Fig_' RhythmMode '/IITT_' file_load([4:end]) '___'];
     
     %%
-    Time = param.Time;
+    Time = linspace(-0.3, 1.6, 1900);
     h = figure;
     imagesc(Time,Time,TT.mean); colorbar; set(gca,'YDir','normal');
     colormap(jet);
     axis equal; axis([min(Time) max(Time) min(Time) max(Time)])
-    caxis([YMIN YMAX]);
+    %caxis([YMIN YMAX]);
     
     line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
     line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
@@ -89,8 +96,4 @@ for i_subject = [3:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; Y
     end
 end
 
-%% Bar chart
-h = figure;
-bar(Result, 'c');
-set(gca, 'xticklabel', [3:16]);
 

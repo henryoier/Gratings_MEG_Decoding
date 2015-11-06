@@ -17,7 +17,7 @@
 %
 
 ProjectName = 'sheng';
-RhythmMode = 'single';
+RhythmMode = 'esingle';
 
 AccuracyAll = zeros(80,6,6,1901);
 
