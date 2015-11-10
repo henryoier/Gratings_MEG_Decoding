@@ -32,6 +32,7 @@ for s1 = 1:nsubj
         CC(:,:,k) = corr(Msq(:,:,s1), Msq(:,:,s2), 'type','Pearson'); %Msq(:,:,s) should be condxtime
         CC(:,:,k+1) = CC(:,:,k)';
         k = k+2;
+        %k=k+1;
     end
 end
 
@@ -56,7 +57,7 @@ end
 %     end
 % end
 
-%% figure step
+
 figure;imagesc(time,time,mean(CC,3))
 set(gca,'YDir','normal');
 set(gca,'fontsize',15);
@@ -65,10 +66,9 @@ ylabel('time (sec)');
 set(gcf,'Color','White');
 colormap('jet');
 colorbar
-%caxis([-0.5, 1]);
 
 %apply FDR
-alpha = 0.001;
+alpha = 0.05;
 pv = sort(P(:)); %sorted pvalues
 N = length(pv); %number of tests
 l = (1:N)'/N * alpha; %FDR line

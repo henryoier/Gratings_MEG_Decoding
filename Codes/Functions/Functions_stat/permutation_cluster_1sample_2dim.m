@@ -1,4 +1,4 @@
-function [SignificantTimes, clusters,clustersize,StatMapPermPV] = permutation_cluster_1sample(data, nperm, cluster_th, significance_th,clusterflag,StatMapPermPV)
+function [SignificantTimes, clusters,clustersize,StatMapPermPV] = permutation_cluster_1sample_2dim(data, nperm, cluster_th, significance_th,clusterflag,StatMapPermPV)
 % function [SignificantTimes, clusters,clustersize,StatMapPermPV] = permutation_cluster_1sample(data, nperm, cluster_th, significance_th,StatMapPermPV)
 %
 % Performs one-sided cluster-size test on data values.
@@ -39,6 +39,7 @@ if ~exist('StatMapPermPV')
     
     %perform permutations
     
+    %parfor i = 2:nperm
     parfor i = 2:nperm
         if ~rem(i,100)
             disp(['permutation: ' num2str(i) ' out of ' num2str(nperm)]);
@@ -60,6 +61,7 @@ clear StatMapPerm;
 
 %find maximum statistic (cluster size)
 [clustermax(1),nclusters,clusters,clustersize] = find_clusters_alld(squeeze(StatMapPermPV(1,:,:)<=cluster_th) , cluster_th);
+%parfor i = 2:nperm
 parfor i = 2:nperm
     if ~rem(i,100)
         disp(['permutation: ' num2str(i) ' out of ' num2str(nperm)]);
@@ -84,6 +86,6 @@ end
 % imagesc(SignificantTimes);set(gca,'YDir','normal');
 
 if clusterflag
-    matlabpool close %only for cluster
+    parpool close %only for cluster
 end
 
