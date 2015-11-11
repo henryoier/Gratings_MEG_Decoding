@@ -38,22 +38,49 @@ for i_subject = [3:16]
  
 end
 
-[CC,P,Pth,fdr_th] = run_between_subject_analysis(AccuracyTT,Time);
+[nsubj ncond ncond ntime] = size(AccuracyTT); %Assume input is M(subj,cond,cond,time)
+M = AccuracyTT;
+
+%convert to squareform
+for s = 1:nsubj
+    for t = 1:ntime
+        %M(:,:,s,t) = tril(M(:,:,s,t),-1); %optional, making sure matrix is lower triangular
+        Msq(:,t,s) = squareform(tril(squeeze(M(s,:,:,t)),-1)); %Msq(condcond,time,subj)
+    end
+end
+
+%compute across subject correlations
+k=1;
+for s1 = 1:nsubj
+    for s2 = 1:s1-1
+        CC1(:,:,k) = corr(Msq(:,:,s1), Msq(:,:,s2), 'type','Pearson'); %Msq(:,:,s) should be condxtime
+        CC1(:,:,k+1) = CC1(:,:,k)';
+        k = k+2;
+        %k=k+1;
+    end
+end
 
 h = figure;
-imagesc(Time,Time,mean(CC, 3)); colorbar; set(gca,'YDir','normal');
+imagesc(Time,Time,mean(CC1, 3)); colorbar; set(gca,'YDir','normal');
 colormap(jet);
 axis equal; axis([min(Time) max(Time) min(Time) max(Time)])
 %caxis([YMIN YMAX]);
+
+% Draw the analytical area
+line('XData', [0.1, 0.15], 'YData', [0.9 0.9], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+line('XData', [0.1, 0.15], 'YData', [0.95 0.95], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+line('XData', [0.1 0.1], 'YData', [0.9, 0.95], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+line('XData', [0.15 0.15], 'YData', [0.9, 0.95], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+
 
 line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
 line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
 line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
 line('XData', [0.8 0.8], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
-h_title = title('Subjects between Time-Time Correlation', 'FontSize', 15);
+h_title = title('Subjects between(analytical area)', 'FontSize', 15);
 set(gca,'FontSize',15);
-max_accuracy = max(max(mean(CC, 3)));
-min_accuracy = min(min(mean(CC, 3)));
+max_accuracy = max(max(mean(CC1, 3)));
+min_accuracy = min(min(mean(CC1, 3)));
 display([ 'Matrix: ' num2str(min_accuracy,3) '% ~ ' num2str(max_accuracy,3) '%']);
 
 %Result = [Result (mean(mean(TT.mean(Baseline + [100:150],Baseline + [900:950]) ,1),2) - min_accuracy)/(max_accuracy - min_accuracy)];
@@ -64,37 +91,51 @@ if (flag_save)
     set(h,'PaperPositionMode','auto');
     set(gca,'FontSize',25);
     set(h_title,'FontSize', 20);
-    print(h,[jpg_file_name 'TT__Correlation_between' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.jpg'],'-djpeg','-r0');
+    print(h,[jpg_file_name 'TT__Correlation_between(analytical area)' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.jpg'],'-djpeg','-r0');
     close(h);
 end
+
+disp('convert');
+
+CC = permute(single(CC1), [3,1,2]);
 
 %     set(h,'Position',[100 100 1200 800]);
 %     axis([ -0.2, 1.5, -0.2, 1.5]); % box off;
 
-%apply FDR
-alpha = 0.05;
-pv = sort(P(:)); %sorted pvalues
-N = length(pv); %number of tests
-l = (1:N)'/N * alpha; %FDR line
-%plot(pv);hold on;plot(l);
-crossings = find( pv>l == 0); 
-if ~isempty(crossings) %if the two lines cross
-    fdr_th = l(max(find( pv>l == 0))); %highest crossing point
-else
-    fdr_th = 0;
-end
-Pth = P<fdr_th;
+disp('statistc');
 
+% Statistic significant analysis
+    nperm = 100;
+    alpha = 0.05;
+    cluster_th = 0.05;   %perform cluster size tests
+    
+    [TT.clusters.SignificantTimes,TT.clusters.clusters,TT.clusters.clustersize] = permutation_cluster_1sample_2dim(CC, nperm, cluster_th, alpha);
+    % imagesc(SignificantTimes);set(gca,'YDir','normal');
+%     CC = reshape(CC,[14,1901*1901,1]);
+%     [TT.ttest.StatMap, TT.ttest.StatMapPv, TT.ttest.Perm, TT.ttest.FDR] = permutation_1sample(CC,nperm,alpha);
+%     CC = reshape(CC,[14,1901,1901]);
+%     TT.ttest.Perm.StatMapTh = reshape(TT.ttest.Perm.StatMapTh,[1901,1901]);
+%     TT.ttest.FDR.StatMapTh = reshape(TT.ttest.FDR.StatMapTh,[1901,1901]);
+%     % imagesc(TT.ttest.FDR_TT.StatMapTh>0);set(gca,'YDir','normal');
+    
 
+%% figure significant time
 h = figure;
-imagesc(Time,Time,Pth); set(gca,'YDir','normal');
+imagesc(Time,Time,TT.clusters.SignificantTimes); set(gca,'YDir','normal');
 axis equal; axis([min(Time) max(Time) min(Time) max(Time)])
+
+% Draw the analytical area
+line('XData', [0.05, 0.2], 'YData', [0.9 0.9], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+line('XData', [0.05, 0.2], 'YData', [1.0 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+line('XData', [0.05 0.05], 'YData', [0.9, 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+line('XData', [0.2 0.2], 'YData', [0.9, 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+
 
 line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
 line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
 line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
 line('XData', [0.8 0.8], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
-h_title = title('Subjects between Time-Time Correlation Significant Time', 'FontSize', 15);
+h_title = title('Subjects between(analytical area)', 'FontSize', 15);
 set(gca,'FontSize',15);
 display([ 'Time-time significant time' ]);
 
@@ -104,6 +145,8 @@ if (flag_save)
     set(h,'PaperPositionMode','auto');
     set(gca,'FontSize',25);
     set(h_title,'FontSize', 20);
-    print(h,[jpg_file_name 'TT__Correlation_between_stime.jpg'],'-djpeg','-r0');
+    print(h,[jpg_file_name 'TT__Correlation_between_stime_larger.jpg'],'-djpeg','-r0');
     close(h);
 end
+
+save([mat_location '\Correlation_between.mat']);

@@ -40,7 +40,7 @@ if ~exist('StatMapPermPV')
     %perform permutations
     
     %parfor i = 2:nperm
-    parfor i = 2:nperm
+    for i = 2:nperm
         if ~rem(i,100)
             disp(['permutation: ' num2str(i) ' out of ' num2str(nperm)]);
         end
@@ -62,7 +62,7 @@ clear StatMapPerm;
 %find maximum statistic (cluster size)
 [clustermax(1),nclusters,clusters,clustersize] = find_clusters_alld(squeeze(StatMapPermPV(1,:,:)<=cluster_th) , cluster_th);
 %parfor i = 2:nperm
-parfor i = 2:nperm
+for i = 2:nperm
     if ~rem(i,100)
         disp(['permutation: ' num2str(i) ' out of ' num2str(nperm)]);
     end

@@ -8,6 +8,7 @@ RhythmMode = 'evoked'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vect
 SensorMode = 'all'; % 'batch' 'all'
 cluster_th = '';
 
+addpath(genpath('Functions'));
 file_location = [ pwd '/Results/' ProjectName ];
 % mat_location = [ file_location '\Mat_' RhythmMode];
 mat_location = [ file_location '/Mat_' RhythmMode ];
@@ -76,7 +77,13 @@ end
     line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
     line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
     line('XData', [0.8 0.8], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
-    h_title = title(['Within 14subjects Time-Time Correlation'], 'FontSize', 15);
+    
+    line('XData', [0.1, 0.15], 'YData', [0.9 0.9], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+    line('XData', [0.1, 0.15], 'YData', [0.95 0.95], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+    line('XData', [0.1 0.1], 'YData', [0.9, 0.95], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+    line('XData', [0.15 0.15], 'YData', [0.9, 0.95], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+    
+    h_title = title(['Within 14subjects Time-Time Correlation(analytical area)'], 'FontSize', 15);
     set(gca,'FontSize',15);
     max_accuracy = max(max(mean(CC, 1)));
     min_accuracy = min(min(mean(CC, 1)));
@@ -90,7 +97,7 @@ end
         set(h,'PaperPositionMode','auto');
         set(gca,'FontSize',25);
         set(h_title,'FontSize', 20);
-        print(h,[jpg_file_name 'TT_within_14subjects_' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.jpg'],'-djpeg','-r0');
+        print(h,[jpg_file_name 'TT_within_14subjects_(analytical area)' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.jpg'],'-djpeg','-r0');
         close(h);
     end
     
@@ -105,7 +112,7 @@ end
     [TT.clusters.SignificantTimes,TT.clusters.clusters,TT.clusters.clustersize] = permutation_cluster_1sample_2dim(CC, nperm, cluster_th, alpha);
     % imagesc(SignificantTimes);set(gca,'YDir','normal');
     CC = reshape(CC,[14,1901*1901,1]);
-    [TT.ttest.StatMap, TT.ttest.StatMapPv, TT.ttest.Perm, TT.ttest.FDR] = permutation_1sample(CC,nperm,alpha,tail);
+    [TT.ttest.StatMap, TT.ttest.StatMapPv, TT.ttest.Perm, TT.ttest.FDR] = permutation_1sample(CC,nperm,alpha);
     CC = reshape(CC,[14,1901,1901]);
     TT.ttest.Perm.StatMapTh = reshape(TT.ttest.Perm.StatMapTh,[1901,1901]);
     TT.ttest.FDR.StatMapTh = reshape(TT.ttest.FDR.StatMapTh,[1901,1901]);
@@ -119,6 +126,13 @@ end
     line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
     line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
     line('XData', [0.8 0.8], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
+    
+    % Draw the analytical area
+    line('XData', [0.1, 0.15], 'YData', [0.9 0.9], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+    line('XData', [0.1, 0.15], 'YData', [0.95 0.95], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+    line('XData', [0.1 0.1], 'YData', [0.9, 0.95], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+    line('XData', [0.15 0.15], 'YData', [0.9, 0.95], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
+   
     h_title = title([SubjectName '      ' RhythmMode '      ' SensorMode '      Time-Time'], 'FontSize', 15);
     set(gca,'FontSize',15);
     display([ 'Time-time significant time' ]);

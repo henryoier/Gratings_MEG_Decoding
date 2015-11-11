@@ -37,6 +37,12 @@ Baseline = 300;
     axis equal; axis([min(Time) max(Time) min(Time) max(Time)])
     %caxis([YMIN YMAX]);
     
+    % Draw the analytical area
+    line('XData', [0.05, 0.2], 'YData', [0.9 0.9], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
+    line('XData', [0.05, 0.2], 'YData', [1.0 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
+    line('XData', [0.05 0.05], 'YData', [0.9, 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
+    line('XData', [0.2 0.2], 'YData', [0.9, 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
+
     line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
     line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
     line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
@@ -69,6 +75,12 @@ Baseline = 300;
         imagesc(Time,Time,TT.stat_stime); set(gca,'YDir','normal');
         axis equal; axis([min(Time) max(Time) min(Time) max(Time)])
         
+        % Draw the analytical area
+        line('XData', [0.05, 0.2], 'YData', [0.9 0.9], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
+        line('XData', [0.05, 0.2], 'YData', [1.0 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
+        line('XData', [0.05 0.05], 'YData', [0.9, 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
+        line('XData', [0.2 0.2], 'YData', [0.9, 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
+       
         line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
         line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
         line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
