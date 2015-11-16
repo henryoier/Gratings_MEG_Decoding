@@ -24,8 +24,7 @@ for i_plot = 1:plot_number
         plot_Data = conv(plot_Data,smooth_vector,'same');
     end
     
-    plot(Time,plot_Data,Data{i_plot}.color,'LineWidth',1.5);
-    
+    plot(Time,plot_Data,'Color',Data{i_plot}.color,'LineWidth',1.5);
 end
 
 % plot significant time

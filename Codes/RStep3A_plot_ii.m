@@ -23,8 +23,8 @@ smooth_vector = ones(1,50)/50;
 % x = rand(1,100);xsm = conv(x,ones(1,10)/10,'same');figure;hold on;plot(x);plot(xsm,'r')
 stimulate_end_time = 0.8;
 
-%for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 20; YMAX = 100; YMIN_CO = -25; YMAX_CO = 40;
-for i_subject = [3:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; YMIN = 20; YMAX = 100; YMIN_CO = -50; YMAX_CO = 60;
+for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 20; YMAX = 100; YMIN_CO = -25; YMAX_CO = 40;
+%for i_subject = [3:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; YMIN = 20; YMAX = 100; YMIN_CO = -50; YMAX_CO = 60;
     
     %% load file
     display(['Subject: ' SubjectName]);
@@ -333,6 +333,28 @@ for i_subject = [3:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; Y
             print(h,[jpg_file_name 'CC,CO,OO.jpg'],'-djpeg','-r0');
             close(h);
         end
+        %% individual
+        clear Data;
+        counter = 0;
+        for i=2:6
+            for j=1:i-1
+                counter = counter + 1;
+                Temp.mean = squeeze(Rhythm.AccyAll.matrix(i,j,:));
+                Data{counter} = Temp;
+                Data{counter}.color = [0.05,0,0.05] * counter;
+                %Data{counter}.color = 'r';
+            end
+        end
+        
+        title_text = [SubjectName '      ' RhythmMode '      ' SensorMode '      15 pairs individual'];
+        
+        h = RStep3Z_subfunction_plot(Data, Time, YMIN, YMAX, stimulate_end_time,title_text,flag_smooth,smooth_vector,flag_save);
+        
+%         if (flag_save)
+%             %saveas(h,[jpg_file_name 'CC,CO,OO.tiff'])
+%             print(h,[jpg_file_name '15 pairs individual.jpg'],'-djpeg','-r0');
+%             close(h);
+%         end
         %% CC, CO, OO respectively
         
         clear Data;
