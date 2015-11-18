@@ -96,7 +96,7 @@ CC = permute(CC, [3 1 2]);
 
 % Statistic significant analysis
     nperm = 1000;
-    alpha = 0.05;
+    alpha = 0.001;
     cluster_th = 0.05;   %perform cluster size tests
     
     [TT.clusters.SignificantTimes,TT.clusters.clusters,TT.clusters.clustersize] = permutation_cluster_1sample_2dim(CC, nperm, cluster_th, alpha);
