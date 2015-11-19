@@ -10,8 +10,8 @@ flag_save = 1;
 Fig_location = [file_location '/Fig_ProjectAway/'];
 
 %% load file
-for condA = 1:2
-    for condB = (condA+1):3
+for condA = 1:1
+    for condB = 2:2
     %for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 20; YMAX = 100; YMIN_CO = -25; YMAX_CO = 40;
     for i_subject = [3:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; YMIN = 20; YMAX = 100; YMIN_CO = -50; YMAX_CO = 60;
        if (strcmp(RhythmMode{condA},'evoked') || RhythmMode{condA}(2) == 'v')
@@ -61,6 +61,22 @@ for condA = 1:2
 
     ProjectAway_Cardinal = eye(15) - (Cardinal * Cardinal') / (Cardinal' * Cardinal); 
 
+    %% Check partial correlation
+    Check_Subject = 3;  %3:14
+    Check_Time = 300;   %1:1901
+    
+    % using partial correlation
+    X = [squareform(squeeze(Original1(Check_Subject,:,:,Check_Time)))'];
+    X = [X squareform(squeeze(Original2(Check_Subject,:,:,Check_Time)))'];
+    Z = Cardinal;
+    
+    RHO = partialcorr(X, Z)
+    ProjZhat = eye(size(Z, 1)) - Z * Z' / (Z' * Z);
+    X_zhat = ProjZhat * X;
+    
+    RHO = partialcorr(X_zhat, Z)
+    RHO = partialcorr([ProjZhat * X(:,1) X(:,2)],  Z)
+   
     %% Project matrix to oblique or cardinal
     for subject = 1:14
         for t=1:1901
