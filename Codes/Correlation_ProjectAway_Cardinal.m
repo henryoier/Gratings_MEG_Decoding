@@ -62,8 +62,8 @@ for condA = 1:1
     ProjectAway_Cardinal = eye(15) - (Cardinal * Cardinal') / (Cardinal' * Cardinal); 
 
     %% Check partial correlation
-    Check_Subject = 3;  %3:14
-    Check_Time = 300;   %1:1901
+    Check_Subject = 4;  %3:14
+    Check_Time = 600;   %1:1901
     
     % using partial correlation
     X = [squareform(squeeze(Original1(Check_Subject,:,:,Check_Time)))'];
