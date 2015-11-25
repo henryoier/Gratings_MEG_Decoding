@@ -10,8 +10,8 @@ flag_save = 1;
 Fig_location = [file_location '/Fig_ProjectAway/'];
 
 %% load file
-for condA = 1:1
-    for condB = 2:2
+for condA = 2:2
+    for condB = 3:3
     %for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 20; YMAX = 100; YMIN_CO = -25; YMAX_CO = 40;
     for i_subject = [3:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; YMIN = 20; YMAX = 100; YMIN_CO = -50; YMAX_CO = 60;
        if (strcmp(RhythmMode{condA},'evoked') || RhythmMode{condA}(2) == 'v')
@@ -61,22 +61,22 @@ for condA = 1:1
 
     ProjectAway_Cardinal = eye(15) - (Cardinal * Cardinal') / (Cardinal' * Cardinal); 
 
-    %% Check partial correlation
-    Check_Subject = 4;  %3:14
-    Check_Time = 600;   %1:1901
-    
-    % using partial correlation
-    X = [squareform(squeeze(Original1(Check_Subject,:,:,Check_Time)))'];
-    X = [X squareform(squeeze(Original2(Check_Subject,:,:,Check_Time)))'];
-    Z = Cardinal;
-    
-    RHO = partialcorr(X, Z)
-    ProjZhat = eye(size(Z, 1)) - Z * Z' / (Z' * Z);
-    X_zhat = ProjZhat * X;
-    
-    RHO = partialcorr(X_zhat, Z)
-    RHO = partialcorr([ProjZhat * X(:,1) X(:,2)],  Z)
-   
+%     %% Check partial correlation
+%     Check_Subject = 4;  %3:14
+%     Check_Time = 600;   %1:1901
+%     
+%     % using partial correlation
+%     X = [squareform(squeeze(Original1(Check_Subject,:,:,Check_Time)))'];
+%     X = [X squareform(squeeze(Original2(Check_Subject,:,:,Check_Time)))'];
+%     Z = Cardinal;
+%     
+%     RHO = partialcorr(X, Z)
+%     ProjZhat = eye(size(Z, 1)) - Z * Z' / (Z' * Z);
+%     X_zhat = ProjZhat * X;
+%     
+%     RHO = partialcorr(X_zhat, Z)
+%     RHO = partialcorr([ProjZhat * X(:,1) X(:,2)],  Z)
+%    
     %% Project matrix to oblique or cardinal
     for subject = 1:14
         for t=1:1901
@@ -90,13 +90,15 @@ for condA = 1:1
     %Calculate Between
     for s1 = 1:14
         for s2 = 1:14
-            CC(:,:,k) = corr(Projection1(:,:,s1), Projection2(:,:,s2), 'type','Pearson'); %Msq(:,:,s) should be condxtime
+            CC(:,:,k) = corr(Projection1(:,:,s1), Projection2(:,:,s2), 'type','Spearman'); %Msq(:,:,s) should be condxtime
             %CC(:,:,k+1) = CC(:,:,k)';
             %k = k+2;
             k=k+1;
         end
     end
 
+    clear projection1 projection2;
+    
     %Calculate within
     % k = 1;
     % for s1 = 1:14
@@ -116,7 +118,7 @@ for condA = 1:1
     line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
     line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
     line('XData', [0.8 0.8], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
-    h_title = title(['Subjects between ' RhythmMode{condA} ' versus ' RhythmMode{condB} ], 'FontSize', 13);
+    h_title = title(['Subjects between ' RhythmMode{condA} ' versus ' RhythmMode{condB} ' Spearman' ], 'FontSize', 13);
     set(gca,'FontSize',15);
 
     %Result = [Result (mean(mean(TT.mean(Baseline + [100:150],Baseline + [900:950]) ,1),2) - min_accuracy)/(max_accuracy - min_accuracy)];
@@ -127,7 +129,7 @@ for condA = 1:1
         set(h,'PaperPositionMode','auto');
         set(gca,'FontSize',25);
         set(h_title,'FontSize', 20);
-        print(h,[Fig_location 'TT__Correlation_Between_' RhythmMode{condA} '_versus_' RhythmMode{condB} '_PCB.jpg'],'-djpeg','-r0');
+        print(h,[Fig_location 'TT__Correlation_Between_' RhythmMode{condA} '_versus_' RhythmMode{condB} '_PCB_Spearman.jpg'],'-djpeg','-r0');
         close(h);
     end
     
@@ -162,7 +164,7 @@ for condA = 1:1
     line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
     line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
     line('XData', [0.8 0.8], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
-    h_title = title(['Subject between ' RhythmMode{condA} ' versus ' RhythmMode{condB} ' siginificant time'], 'FontSize', 13);
+    h_title = title(['Subject between ' RhythmMode{condA} ' versus ' RhythmMode{condB} ' siginificant time Spearman'], 'FontSize', 13);
     set(gca,'FontSize',14);
 
     if (flag_save)
@@ -171,9 +173,11 @@ for condA = 1:1
         set(h,'PaperPositionMode','auto');
         set(gca,'FontSize',25);
         set(h_title,'FontSize', 20);
-        print(h,[Fig_location 'TT__Correlation_Between_' RhythmMode{condA} ' versus ' RhythmMode{condB} '_SignificantTimes_PCB.jpg'],'-djpeg','-r0');
+        print(h,[Fig_location 'TT__Correlation_Between_' RhythmMode{condA} ' versus ' RhythmMode{condB} '_SignificantTimes_PCB_Spearman.jpg'],'-djpeg','-r0');
         close(h);
     end
+    
+    clear cc;
     end
 end
 
