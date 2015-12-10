@@ -5,17 +5,18 @@
 clear;clc; close all;
 addpath(genpath('Functions'));
 ProjectName = 'sheng';   %%%%%
-RhythmMode = 'evoked'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
+RhythmMode = 'esingle'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
 SensorMode = 'all'; % 'batch' 'all' 'scouts'
-iitt = 'iitt';
+iitt = 'ii';
 
 flag_save = 1;
-flag_all = 1;
+flag_all = 0;
 flag_weight = 0;
 flag_weight_movie = 0;
 flag_diff = 0;
 flag_Cardinal = 0;
 flag_CO = 0;
+flag_C3 = 1;
 
 in_time = [210:30:901];
 flag_smooth = 1;
@@ -25,16 +26,17 @@ stimulate_end_time = 0.8;
 
 for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 20; YMAX = 100; YMIN_CO = -25; YMAX_CO = 40;
 %for i_subject = [3:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; YMIN = 20; YMAX = 100; YMIN_CO = -50; YMAX_CO = 60;
-    
+
+for freq=2:2:80
     %% load file
     display(['Subject: ' SubjectName]);
     file_location = [pwd '/Results/' ProjectName];
-    mat_location = [ file_location '/Mat_' RhythmMode ]; 
-    fig_location = [ file_location '/Fig_' RhythmMode]
+    mat_location = [ file_location '/Mat_TFA_' RhythmMode '/ACCY_' RhythmMode]; 
+    fig_location = [ file_location '/Fig_TFA_' RhythmMode];
 
     if strcmp(iitt, 'ii')
-        file_load = [ 'ACCY_' SubjectName '_' RhythmMode '_' SensorMode];
-        jpg_file_name = [ fig_location '/ACCY_' SubjectName '_' RhythmMode '_' SensorMode '___'];
+        file_load = [ 'TFA_' SubjectName '_' RhythmMode num2str(freq) '_' SensorMode];
+        jpg_file_name = [ fig_location '/TFA_' SubjectName '_' RhythmMode num2str(freq) '_' SensorMode '___'];
 %         jpg_file_name = [ file_location '/Fig3_IITT/Fig_' RhythmMode '/ACCY_' SubjectName '_' RhythmMode '_' SensorMode '___'];
     else
         file_load = [ 'II_' SubjectName '_' RhythmMode '_' SensorMode];
@@ -312,8 +314,9 @@ for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 20; YMAX = 100; YMIN_
             close(h);
         end
         
+    end
         %% CC, CO ,OO
-        
+        if flag_C3
         clear Data;
         Data{1} = Rhythm.CC;
         Data{1}.color = 'r-';
@@ -322,7 +325,7 @@ for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 20; YMAX = 100; YMIN_
         Data{3} = Rhythm.OO;
         Data{3}.color = 'g-';
         
-        title_text = [SubjectName '      ' RhythmMode '      ' SensorMode '      CC,CO,OO'];
+        title_text = [SubjectName ' ' RhythmMode ' at ' num2str(freq) 'Hz ' SensorMode ' CC,CO,OO'];
         
         h = RStep3Z_subfunction_plot(Data, Time, YMIN, YMAX, stimulate_end_time,title_text,flag_smooth,smooth_vector,flag_save);
         
@@ -333,6 +336,9 @@ for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 20; YMAX = 100; YMIN_
             print(h,[jpg_file_name 'CC,CO,OO.jpg'],'-djpeg','-r0');
             close(h);
         end
+        end
+        
+        if flag_CO
         %% individual
         clear Data;
         counter = 0;
@@ -359,43 +365,17 @@ for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 20; YMAX = 100; YMIN_
         
         clear Data;
         Data{1} = Rhythm.CC;
-        Data{1}.color = 'r-';
-        Temp.mean = squeeze(Rhythm.AccyAll.matrix(2,1,:));
-        Temp.stat_stime =Rhythm.CO.stat_stime;
-        Data{2} = Temp;
-        Data{2}.color = 'b-';
-        Temp.mean = squeeze(Rhythm.AccyAll.matrix(3,1,:));
-        Temp.stat_stime =Rhythm.CO.stat_stime;
-        Data{3} = Temp;
-        Data{3}.color = 'b-';
-        Temp.mean = squeeze(Rhythm.AccyAll.matrix(5,1,:));
-        Temp.stat_stime =Rhythm.CO.stat_stime;
-        Data{4} = Temp;
-        Data{4}.color = 'b-';
-        Temp.mean = squeeze(Rhythm.AccyAll.matrix(6,1,:));
-        Temp.stat_stime =Rhythm.CO.stat_stime;
-        Data{5} = Temp;
-        Data{5}.color = 'b-';
-        Temp.mean = squeeze(Rhythm.AccyAll.matrix(4,2,:));
-        Temp.stat_stime =Rhythm.CO.stat_stime;
-        Data{6} = Temp;
-        Data{6}.color = 'b-';
-        Temp.mean = squeeze(Rhythm.AccyAll.matrix(4,3,:));
-        Temp.stat_stime =Rhythm.CO.stat_stime;
-        Data{7} = Temp;
-        Data{7}.color = 'b-';
-        Temp.mean = squeeze(Rhythm.AccyAll.matrix(5,4,:));
-        Temp.stat_stime =Rhythm.CO.stat_stime;
-        Data{8} = Temp;
-        Data{8}.color = 'b-';
-        Temp.mean = squeeze(Rhythm.AccyAll.matrix(6,4,:));
-        Temp.stat_stime =Rhythm.CO.stat_stime;
-        Data{9} = Temp;
-        Data{9}.color = 'b-';
-        Data{10} = Rhythm.OO;
-        Data{10}.color = 'g-';
+        Data{1}.color = 'r';
+        Data{1}.stat_time =Rhythm.CC.stat_stime;
+        Data{2} = Rhythm.CO;
+        Data{2}.color = 'g';
+        Data{2}.stat_time =Rhythm.CO.stat_stime;
+        Data{3} = Rhythm.OO;
+        Data{3}.color = 'b';
+        Data{3}.stat_time =Rhythm.OO.stat_stime;
+   
         
-        title_text = [SubjectName '      ' RhythmMode '      ' SensorMode '      CC,CO,OO individual'];
+        title_text = [SubjectName ' ' RhythmMode ' at ' num2str(freq) ' ' SensorMode ' CC,CO,OO individual'];
         
         h = RStep3Z_subfunction_plot(Data, Time, YMIN, YMAX, stimulate_end_time,title_text,flag_smooth,smooth_vector,flag_save);
         
@@ -405,6 +385,7 @@ for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 20; YMAX = 100; YMIN_
             %saveas(h,[jpg_file_name 'CC,CO,OO.tiff'])
             print(h,[jpg_file_name 'CC,CO,OO individual.jpg'],'-djpeg','-r0');
             close(h);
+        end
         end
     end
 end

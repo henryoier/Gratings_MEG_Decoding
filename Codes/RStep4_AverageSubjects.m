@@ -4,7 +4,7 @@ function RStep4_AverageSubjectsPost(RhythmMode,FileType,clusterflag)
 
 % % for example
 % clear;clc;
-RhythmMode = 'evectorhigh'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle' 'vectorlow'
+RhythmMode = 'esingle'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle' 'vectorlow'
 FileType = 'II';
 clusterflag = '0';
 
@@ -14,7 +14,7 @@ clusterflag = str2num(clusterflag);
 ProjectName = ['sheng']; % fang02_grating01
 
 files_number = 14;
-SubjectName = [ '14gratings316'];
+Subject_Name = [ 'grating'];
 
 nperm = 1000;
 alpha = 0.05;
@@ -27,8 +27,8 @@ if clusterflag
     if (length(FileType)==2) file_location = ['/om/user/mfang/RhythmClassifier/TT/Mat_' RhythmMode  ]; end
     if (length(FileType)==3) file_location = ['/om/user/mfang/RhythmClassifier/TT/Mat0_TFA_' RhythmMode  ]; end
 else
-    if (length(FileType)==2) file_location = ['/dataslow/sheng/Project of Sheng/Results/sheng/Mat_' RhythmMode  ]; end
-    if (length(FileType)==3) file_location = ['/dataslow/sheng/Project of Sheng/Results/sheng/Mat_' RhythmMode  ]; end
+    if (length(FileType)==2) file_location = ['/dataslow/sheng/Project of Sheng/Results/sheng/Mat_TFA_' RhythmMode  ]; end
+    if (length(FileType)==3) file_location = ['/dataslow/sheng/Project of Sheng/Results/sheng/Mat_TFA_' RhythmMode  ]; end
 end
 
 
@@ -36,16 +36,18 @@ end
 SensorMode = 'all'; % 'batch' 'all'
 permutations = 'p100';
 
-file_names = dir( [ file_location '/' FileType '_grating*_' RhythmMode '_' SensorMode '.mat'] );
+for freq = 2:2:80
+    
+file_names = dir( [ file_location '/ACCY_gratings_esingles/ACCY_grating*_' RhythmMode num2str(freq) '_' SensorMode '.mat'] );
 disp([ FileType ': files numbers = ' num2str(length(file_names)) ]);
 
 switch FileType
     % for II
     case 'II'
         if ( length(file_names) == files_number )
-            II_tmp = load([file_location, '/', file_names(1).name]);
+            II_tmp = load([file_location, '/ACCY_gratings_esingles/', file_names(1).name]);
             Rhythm.param = II_tmp.Rhythm.param;
-            Rhythm.param.SubjectName = SubjectName;
+%            Rhythm.param.SubjectName = SubjectName;
             
             % initialize, for the first file
             % AccyAll
@@ -69,7 +71,7 @@ switch FileType
             
             % the other files
             for i_file = 2:length(file_names)
-                II_tmp = load([file_location, '/', file_names(i_file).name]);
+                II_tmp = load([file_location, '/ACCY_gratings_esingles/', file_names(i_file).name]);
                 Data_AccyAll(i_file,:) = II_tmp.Rhythm.AccyAll.mean;
                 Data_AccyAll_matrix(i_file,:,:,:) = II_tmp.Rhythm.AccyAll.matrix;
                 Data_Diff30(i_file,:) = II_tmp.Rhythm.Diff30.mean;
@@ -94,53 +96,53 @@ switch FileType
             Rhythm.param.stat.tail = tail;
             Rhythm.param.stat.cluster_th = cluster_th;   %perform cluster size tests
             % AccyAll
-            [StatMap_AccyAll,StatMapPv_AccyAll,Perm_AccyAll,FDR_AccyAll,PermMatrix_AccyAll] = permutation_1sample(Data_AccyAll-50,nperm,alpha,tail);
-            [SignificantTimes_AccyAll, clusters_AccyAll,clustersize_AccyAll,StatMapPermpv_AccyAll] = permutation_cluster_1sample(Data_AccyAll-50, nperm, cluster_th, alpha);
+%             [StatMap_AccyAll,StatMapPv_AccyAll,Perm_AccyAll,FDR_AccyAll,PermMatrix_AccyAll] = permutation_1sample(Data_AccyAll-50,nperm,alpha,tail);
+%             [SignificantTimes_AccyAll, clusters_AccyAll,clustersize_AccyAll,StatMapPermpv_AccyAll] = permutation_cluster_1sample(Data_AccyAll-50, nperm, cluster_th, alpha);
             % Diff
-            [SignificantTimes_Diff30] = permutation_cluster_1sample(Data_Diff30-50, nperm, cluster_th, alpha);
-            [SignificantTimes_Diff60] = permutation_cluster_1sample(Data_Diff60-50, nperm, cluster_th, alpha);
-            [SignificantTimes_Diff90] = permutation_cluster_1sample(Data_Diff90-50, nperm, cluster_th, alpha);
-            [SignificantTimes_Cardinal] = permutation_cluster_1sample(Data_Cardinal-50, nperm, cluster_th, alpha);
-            [SignificantTimes_Cardinal30] = permutation_cluster_1sample(Data_Cardinal30-50, nperm, cluster_th, alpha);
-            [SignificantTimes_Cardinal60] = permutation_cluster_1sample(Data_Cardinal60-50, nperm, cluster_th, alpha);
-            [SignificantTimes_Cardinal90] = permutation_cluster_1sample(Data_Cardinal90-50, nperm, cluster_th, alpha);
-            [SignificantTimes_Oblique] = permutation_cluster_1sample(Data_Oblique-50, nperm, cluster_th, alpha);
-            [SignificantTimes_Oblique30] = permutation_cluster_1sample(Data_Oblique30-50, nperm, cluster_th, alpha);
-            [SignificantTimes_Oblique60] = permutation_cluster_1sample(Data_Oblique60-50, nperm, cluster_th, alpha);
-            [SignificantTimes_Oblique90] = permutation_cluster_1sample(Data_Oblique90-50, nperm, cluster_th, alpha);
+%             [SignificantTimes_Diff30] = permutation_cluster_1sample(Data_Diff30-50, nperm, cluster_th, alpha);
+%             [SignificantTimes_Diff60] = permutation_cluster_1sample(Data_Diff60-50, nperm, cluster_th, alpha);
+%             [SignificantTimes_Diff90] = permutation_cluster_1sample(Data_Diff90-50, nperm, cluster_th, alpha);
+%             [SignificantTimes_Cardinal] = permutation_cluster_1sample(Data_Cardinal-50, nperm, cluster_th, alpha);
+%             [SignificantTimes_Cardinal30] = permutation_cluster_1sample(Data_Cardinal30-50, nperm, cluster_th, alpha);
+%             [SignificantTimes_Cardinal60] = permutation_cluster_1sample(Data_Cardinal60-50, nperm, cluster_th, alpha);
+%             [SignificantTimes_Cardinal90] = permutation_cluster_1sample(Data_Cardinal90-50, nperm, cluster_th, alpha);
+%             [SignificantTimes_Oblique] = permutation_cluster_1sample(Data_Oblique-50, nperm, cluster_th, alpha);
+%             [SignificantTimes_Oblique30] = permutation_cluster_1sample(Data_Oblique30-50, nperm, cluster_th, alpha);
+%             [SignificantTimes_Oblique60] = permutation_cluster_1sample(Data_Oblique60-50, nperm, cluster_th, alpha);
+             [SignificantTimes_Oblique90] = permutation_cluster_1sample(Data_Oblique90-50, nperm, cluster_th, alpha);
             [SignificantTimes_CC] = permutation_cluster_1sample(Data_CC-50, nperm, cluster_th, alpha);
             [SignificantTimes_CO] = permutation_cluster_1sample(Data_CO-50, nperm, cluster_th, alpha);
             [SignificantTimes_OO] = permutation_cluster_1sample(Data_OO-50, nperm, cluster_th, alpha);
             
             % output file
-            Rhythm.AccyAll.mean = mean(Data_AccyAll);
-            Rhythm.AccyAll.matrix = squeeze(mean(Data_AccyAll_matrix));
-            Rhythm.AccyAll.stat_stime = SignificantTimes_AccyAll;
-            Rhythm.AccyAll.stat_ttest = Perm_AccyAll.StatMapTh;
-            Rhythm.AccyAll.stat_pvalue = FDR_AccyAll.StatMapTh;
-            
-            Rhythm.Diff30.mean = mean(Data_Diff30);
-            Rhythm.Diff30.stat_stime = SignificantTimes_Diff30;
-            Rhythm.Diff60.mean = mean(Data_Diff60);
-            Rhythm.Diff60.stat_stime = SignificantTimes_Diff60;
-            Rhythm.Diff90.mean = mean(Data_Diff90);
-            Rhythm.Diff90.stat_stime = SignificantTimes_Diff90;
-            Rhythm.Cardinal.mean = mean(Data_Cardinal);
-            Rhythm.Cardinal.stat_stime = SignificantTimes_Cardinal;
-            Rhythm.Cardinal30.mean = mean(Data_Cardinal30);
-            Rhythm.Cardinal30.stat_stime = SignificantTimes_Cardinal30;
-            Rhythm.Cardinal60.mean = mean(Data_Cardinal60);
-            Rhythm.Cardinal60.stat_stime = SignificantTimes_Cardinal60;
-            Rhythm.Cardinal90.mean = mean(Data_Cardinal90);
-            Rhythm.Cardinal90.stat_stime = SignificantTimes_Cardinal90;
-            Rhythm.Oblique.mean = mean(Data_Oblique);
-            Rhythm.Oblique.stat_stime = SignificantTimes_Oblique;
-            Rhythm.Oblique30.mean = mean(Data_Oblique30);
-            Rhythm.Oblique30.stat_stime = SignificantTimes_Oblique30;
-            Rhythm.Oblique60.mean = mean(Data_Oblique60);
-            Rhythm.Oblique60.stat_stime = SignificantTimes_Oblique60;
-            Rhythm.Oblique90.mean = mean(Data_Oblique90);
-            Rhythm.Oblique90.stat_stime = SignificantTimes_Oblique90;
+%             Rhythm.AccyAll.mean = mean(Data_AccyAll);
+%             Rhythm.AccyAll.matrix = squeeze(mean(Data_AccyAll_matrix));
+%             Rhythm.AccyAll.stat_stime = SignificantTimes_AccyAll;
+%             Rhythm.AccyAll.stat_ttest = Perm_AccyAll.StatMapTh;
+%             Rhythm.AccyAll.stat_pvalue = FDR_AccyAll.StatMapTh;
+%             
+%             Rhythm.Diff30.mean = mean(Data_Diff30);
+%             Rhythm.Diff30.stat_stime = SignificantTimes_Diff30;
+%             Rhythm.Diff60.mean = mean(Data_Diff60);
+%             Rhythm.Diff60.stat_stime = SignificantTimes_Diff60;
+%             Rhythm.Diff90.mean = mean(Data_Diff90);
+%             Rhythm.Diff90.stat_stime = SignificantTimes_Diff90;
+%             Rhythm.Cardinal.mean = mean(Data_Cardinal);
+%             Rhythm.Cardinal.stat_stime = SignificantTimes_Cardinal;
+%             Rhythm.Cardinal30.mean = mean(Data_Cardinal30);
+%             Rhythm.Cardinal30.stat_stime = SignificantTimes_Cardinal30;
+%             Rhythm.Cardinal60.mean = mean(Data_Cardinal60);
+%             Rhythm.Cardinal60.stat_stime = SignificantTimes_Cardinal60;
+%             Rhythm.Cardinal90.mean = mean(Data_Cardinal90);
+%             Rhythm.Cardinal90.stat_stime = SignificantTimes_Cardinal90;
+%             Rhythm.Oblique.mean = mean(Data_Oblique);
+%             Rhythm.Oblique.stat_stime = SignificantTimes_Oblique;
+%             Rhythm.Oblique30.mean = mean(Data_Oblique30);
+%             Rhythm.Oblique30.stat_stime = SignificantTimes_Oblique30;
+%             Rhythm.Oblique60.mean = mean(Data_Oblique60);
+%             Rhythm.Oblique60.stat_stime = SignificantTimes_Oblique60;
+%             Rhythm.Oblique90.mean = mean(Data_Oblique90);
+%             Rhythm.Oblique90.stat_stime = SignificantTimes_Oblique90;
             Rhythm.CC.mean = mean(Data_CC);
             Rhythm.CC.stat_stime = SignificantTimes_CC;
             Rhythm.CO.mean = mean(Data_CO);
@@ -149,7 +151,7 @@ switch FileType
             Rhythm.OO.stat_stime = SignificantTimes_OO;
             
             
-            save( [ file_location '/II_' SubjectName '_' RhythmMode '_' SensorMode '.mat'], 'SubjectName', 'Rhythm');
+            save( [ file_location '/ACCY_esingles/TFA_14gratings316_' RhythmMode num2str(freq) '_' SensorMode '.mat'], 'Rhythm');
         else
             error('myError: wrong loading!')
         end
@@ -259,5 +261,5 @@ switch FileType
         save( [ file_location '/Accuracy_' param.SubjectName '_' RhythmMode '_' SensorMode '.mat'], 'param', 'AccuracyMEG');
         
 end
-
+end
 disp([ 'Finished!' ]);

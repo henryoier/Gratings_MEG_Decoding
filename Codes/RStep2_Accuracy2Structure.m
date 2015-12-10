@@ -13,14 +13,14 @@
 %
 
 clear;clc;
-iitt = 'iitt'; % 'ii'
+iitt = 'ii'; % 'ii'
 
-% for single_number = [ 12:2:80 ] RhythmMode = ['isingle' num2str(single_number)]; % 'evoked', 'beta', 'gamma', 'test',['single' num2str(single_number)]
-for single_number = [0] RhythmMode = 'evectorhigh'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
+for single_number = [ 2:2:80 ] RhythmMode = ['isingle' num2str(single_number)]; % 'evoked', 'beta', 'gamma', 'test',['single' num2str(single_number)]
+%for single_number = [0] RhythmMode = 'evectorhigh'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
     permutations = 'p100';
     ProjectName = ['sheng'];
     
-    file_location = [ '/dataslow/sheng/Project of Sheng/Results/sheng/Mat_' RhythmMode  ];
+    file_location = [ '/dataslow/sheng/Project of Sheng/Results/sheng/Mat_TFA_isingle/Accuracy_gratings_isingles'  ];
     
     for i_subject = [3:16];   SubjectName = ['grating' num2str(i_subject, '%0.2d') ];
         disp([ 'Subject: ' SubjectName ' , Rhythm: ' RhythmMode])
