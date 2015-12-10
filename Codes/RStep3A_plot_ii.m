@@ -5,7 +5,7 @@
 clear;clc; close all;
 addpath(genpath('Functions'));
 ProjectName = 'sheng';   %%%%%
-RhythmMode = 'esingle'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
+RhythmMode = 'single'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
 SensorMode = 'all'; % 'batch' 'all' 'scouts'
 iitt = 'ii';
 

@@ -4,7 +4,7 @@ function RStep4_AverageSubjectsPost(RhythmMode,FileType,clusterflag)
 
 % % for example
 % clear;clc;
-RhythmMode = 'isingle'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle' 'vectorlow'
+RhythmMode = 'single'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle' 'vectorlow'
 FileType = 'II';
 clusterflag = '0';
 
@@ -38,14 +38,14 @@ permutations = 'p100';
 
 for freq = 2:2:80
     
-file_names = dir( [ file_location '/ACCY_gratings_isingles/ACCY_grating*_' RhythmMode num2str(freq) '_' SensorMode '.mat'] );
+file_names = dir( [ file_location '/ACCY_gratings_singles/ACCY_grating*_' RhythmMode num2str(freq) '_' SensorMode '.mat'] );
 disp([ FileType ': files numbers = ' num2str(length(file_names)) ]);
 
 switch FileType
     % for II
     case 'II'
         if ( length(file_names) == files_number )
-            II_tmp = load([file_location, '/ACCY_gratings_isingles/', file_names(1).name]);
+            II_tmp = load([file_location, '/ACCY_gratings_singles/', file_names(1).name]);
             Rhythm.param = II_tmp.Rhythm.param;
 %            Rhythm.param.SubjectName = SubjectName;
             
@@ -71,7 +71,7 @@ switch FileType
             
             % the other files
             for i_file = 2:length(file_names)
-                II_tmp = load([file_location, '/ACCY_gratings_isingles/', file_names(i_file).name]);
+                II_tmp = load([file_location, '/ACCY_gratings_singles/', file_names(i_file).name]);
                 Data_AccyAll(i_file,:) = II_tmp.Rhythm.AccyAll.mean;
                 Data_AccyAll_matrix(i_file,:,:,:) = II_tmp.Rhythm.AccyAll.matrix;
                 Data_Diff30(i_file,:) = II_tmp.Rhythm.Diff30.mean;
@@ -151,7 +151,7 @@ switch FileType
             Rhythm.OO.stat_stime = SignificantTimes_OO;
             
             
-            save( [ file_location '/ACCY_isingle/TFA_14gratings316_' RhythmMode num2str(freq) '_' SensorMode '.mat'], 'Rhythm');
+            save( [ file_location '/ACCY_single/TFA_14gratings316_' RhythmMode num2str(freq) '_' SensorMode '.mat'], 'Rhythm');
         else
             error('myError: wrong loading!')
         end
