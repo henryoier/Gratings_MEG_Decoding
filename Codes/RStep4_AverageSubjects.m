@@ -4,7 +4,7 @@ function RStep4_AverageSubjectsPost(RhythmMode,FileType,clusterflag)
 
 % % for example
 % clear;clc;
-RhythmMode = 'esingle'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle' 'vectorlow'
+RhythmMode = 'isingle'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle' 'vectorlow'
 FileType = 'II';
 clusterflag = '0';
 
@@ -38,14 +38,14 @@ permutations = 'p100';
 
 for freq = 2:2:80
     
-file_names = dir( [ file_location '/ACCY_gratings_esingles/ACCY_grating*_' RhythmMode num2str(freq) '_' SensorMode '.mat'] );
+file_names = dir( [ file_location '/ACCY_gratings_isingles/ACCY_grating*_' RhythmMode num2str(freq) '_' SensorMode '.mat'] );
 disp([ FileType ': files numbers = ' num2str(length(file_names)) ]);
 
 switch FileType
     % for II
     case 'II'
         if ( length(file_names) == files_number )
-            II_tmp = load([file_location, '/ACCY_gratings_esingles/', file_names(1).name]);
+            II_tmp = load([file_location, '/ACCY_gratings_isingles/', file_names(1).name]);
             Rhythm.param = II_tmp.Rhythm.param;
 %            Rhythm.param.SubjectName = SubjectName;
             
@@ -71,7 +71,7 @@ switch FileType
             
             % the other files
             for i_file = 2:length(file_names)
-                II_tmp = load([file_location, '/ACCY_gratings_esingles/', file_names(i_file).name]);
+                II_tmp = load([file_location, '/ACCY_gratings_isingles/', file_names(i_file).name]);
                 Data_AccyAll(i_file,:) = II_tmp.Rhythm.AccyAll.mean;
                 Data_AccyAll_matrix(i_file,:,:,:) = II_tmp.Rhythm.AccyAll.matrix;
                 Data_Diff30(i_file,:) = II_tmp.Rhythm.Diff30.mean;
@@ -109,7 +109,7 @@ switch FileType
 %             [SignificantTimes_Oblique] = permutation_cluster_1sample(Data_Oblique-50, nperm, cluster_th, alpha);
 %             [SignificantTimes_Oblique30] = permutation_cluster_1sample(Data_Oblique30-50, nperm, cluster_th, alpha);
 %             [SignificantTimes_Oblique60] = permutation_cluster_1sample(Data_Oblique60-50, nperm, cluster_th, alpha);
-             [SignificantTimes_Oblique90] = permutation_cluster_1sample(Data_Oblique90-50, nperm, cluster_th, alpha);
+%            [SignificantTimes_Oblique90] = permutation_cluster_1sample(Data_Oblique90-50, nperm, cluster_th, alpha);
             [SignificantTimes_CC] = permutation_cluster_1sample(Data_CC-50, nperm, cluster_th, alpha);
             [SignificantTimes_CO] = permutation_cluster_1sample(Data_CO-50, nperm, cluster_th, alpha);
             [SignificantTimes_OO] = permutation_cluster_1sample(Data_OO-50, nperm, cluster_th, alpha);
@@ -151,7 +151,7 @@ switch FileType
             Rhythm.OO.stat_stime = SignificantTimes_OO;
             
             
-            save( [ file_location '/ACCY_esingles/TFA_14gratings316_' RhythmMode num2str(freq) '_' SensorMode '.mat'], 'Rhythm');
+            save( [ file_location '/ACCY_isingle/TFA_14gratings316_' RhythmMode num2str(freq) '_' SensorMode '.mat'], 'Rhythm');
         else
             error('myError: wrong loading!')
         end
