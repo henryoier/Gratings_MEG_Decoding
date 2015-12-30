@@ -3,13 +3,13 @@
 
 clear;clc;close all;
 ProjectName = 'sheng';   %%%%%
-RhythmMode={'evoked','isingle28','isingle56'}; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
+RhythmMode={'evoked','ivectorlow','ivectorhigh'}; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
 SensorMode = 'all'; % 'batch' 'all'
 cluster_th = '';
 
 Time = linspace(-0.3, 1.6, 1900);
 
-flag_save = 1;
+flag_save = 0;
 
 file_location = [ pwd '/Results/' ProjectName ];
 % mat_location = [ file_location '\Mat_' RhythmMode];
@@ -27,38 +27,38 @@ AccuracyTT1 = zeros(14,6,6,1901);
 AccuracyTT2 = zeros(14,6,6,1901);
 
 
-for condA = 1:2
-    for condB = (condA + 1):3
+for condA = 1:1
+    for condB = 2:2
 %for i_subject = [0]  SubjectName = '14gratings316'; %YMIN = 40; YMAX = 90;
 disp([RhythmMode{condA} ' versus ' RhythmMode{condB}]);
 for i_subject = [3:16]
-    if strcmp(RhythmMode{condA},'evoked')
+    %if strcmp(RhythmMode{condA},'evoked')
         mat_location = [ file_location '/Mat_' RhythmMode{condA}];
         SubjectName = ['grating' num2str(i_subject, '%0.2d')]; 
         file_load = [ 'II_' SubjectName '_' RhythmMode{condA} '_' SensorMode '.mat'];
         load( [mat_location '/' file_load]);
         AccuracyTT1(i_subject-2,:,:,:) = Rhythm.AccyAll.matrix;
-    else
-        mat_location = [ file_location '/Mat_TFA_isingle/Accy_gratings_isingles'];
-        SubjectName = ['grating' num2str(i_subject, '%0.2d')]; 
-        file_load = [ 'ACCY_' SubjectName '_' RhythmMode{condA} '_' SensorMode '.mat'];
-        load( [mat_location '/' file_load]);
-        AccuracyTT1(i_subject-2,:,:,:) = Rhythm.AccyAll.matrix;
-    end
+%     else
+%         mat_location = [ file_location '/Mat_TFA_isingle/ACCY_gratings_ivector'];
+%         SubjectName = ['grating' num2str(i_subject, '%0.2d')]; 
+%         file_load = [ 'ACCY_' SubjectName '_' RhythmMode{condA} '_' SensorMode '.mat'];
+%         load( [mat_location '/' file_load]);
+%         AccuracyTT1(i_subject-2,:,:,:) = Rhythm.AccyAll.matrix;
+%     end
     
-    if strcmp(RhythmMode{condB},'evoked')
+    %if strcmp(RhythmMode{condB},'evoked')
         mat_location = [ file_location '/Mat_' RhythmMode{condB}];
         SubjectName = ['grating' num2str(i_subject, '%0.2d')]; 
         file_load = [ 'II_' SubjectName '_' RhythmMode{condB} '_' SensorMode '.mat'];
         load( [mat_location '/' file_load]);
         AccuracyTT2(i_subject-2,:,:,:) = Rhythm.AccyAll.matrix;
-    else
-        mat_location = [ file_location '/Mat_TFA_isingle/Accy_gratings_isingles'];
-        SubjectName = ['grating' num2str(i_subject, '%0.2d')]; 
-        file_load = [ 'ACCY_' SubjectName '_' RhythmMode{condB} '_' SensorMode '.mat'];
-        load( [mat_location '/' file_load]);
-        AccuracyTT2(i_subject-2,:,:,:) = Rhythm.AccyAll.matrix;
-    end
+%     else
+%         mat_location = [ file_location '/Mat_TFA_isingle/ACCY_gratings_isingles'];
+%         SubjectName = ['grating' num2str(i_subject, '%0.2d')]; 
+%         file_load = [ 'ACCY_' SubjectName '_' RhythmMode{condB} '_' SensorMode '.mat'];
+%         load( [mat_location '/' file_load]);
+%         AccuracyTT2(i_subject-2,:,:,:) = Rhythm.AccyAll.matrix;
+%     end
 end
 
 CC = run_between_subject_signals(AccuracyTT1,AccuracyTT2,Time);
@@ -96,10 +96,11 @@ CC = permute(CC, [3 1 2]);
 
 % Statistic significant analysis
     nperm = 1000;
-    alpha = 0.001;
+    alpha = 0.05;
     cluster_th = 0.05;   %perform cluster size tests
+    tail = 'onsided';
     
-    [TT.clusters.SignificantTimes,TT.clusters.clusters,TT.clusters.clustersize] = permutation_cluster_1sample_2dim(CC, nperm, cluster_th, alpha);
+    [TT.clusters.SignificantTimes,TT.clusters.clusters,TT.clusters.clustersize] = permutation_cluster_1sample_alld(CC, nperm, cluster_th, alpha, tail);
 %     % imagesc(SignificantTimes);set(gca,'YDir','normal');
 %     CC = reshape(CC,[14,1901*1901,1]);
 %     [TT.ttest.StatMap, TT.ttest.StatMapPv, TT.ttest.Perm, TT.ttest.FDR] = permutation_1sample(CC,nperm,alpha);
@@ -128,7 +129,7 @@ if (flag_save)
     set(h,'PaperPositionMode','auto');
     set(gca,'FontSize',25);
     set(h_title,'FontSize', 20);
-    print(h,[jpg_file_name 'TT__Correlation_stime_' RhythmMode{condA} '_versus_' RhythmMode{condB} '.jpg'],'-djpeg','-r0');
+    print(h,[jpg_file_name 'TT__Correlation_stime_' RhythmMode{condA} '_versus_' RhythmMode{condB} '_0.05.jpg'],'-djpeg','-r0');
     close(h);
 end
 end

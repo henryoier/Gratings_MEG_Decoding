@@ -31,11 +31,11 @@ function RStep1_RhythmClassifierApply()
 
 clear; clc
 ProjectName = 'sheng';
-SubjectNames = 'grating03';  % 'grating03 to grating 16'
+SubjectName = 'grating12';  % 'grating03 to grating 16'
 RhythmMode = 'evoked';      % 'evoked' 'vectorlow' 'vectorhigh' 'single30'
-SensorMode = 'all';         % 'all' 'test7' 'batch' 'scouts'
+SensorMode = 'scouts';         % 'all' 'test7' 'batch' 'scouts'
 iitt = 'ii';                % 'ii' 'iitt' --- image-image-time-time mode off/on
-permutations = 'p10';       % 'p10'
+permutations = 'p100';       % 'p10'
 group = 'groupall';    	% 'groupall' 'grouptest' 'group1'
 clusterflag = '0';          % '0' for single pc, '1' for cluster
 
@@ -93,12 +93,12 @@ end
     
 disp('All finished!');
 toc
-closematlabpool;
+%closematlabpool;
 
-%% Parallel computing
-startmatlabpool;
-parfor i = 3:16
-    RStep1_RhythmClassifierApplyParallel(i);
-end
-closematlabpool;
+% % Parallel computing
+% startmatlabpool;
+% parfor i = 3:16
+%     RStep1_RhythmClassifierApplyParallel(i);
+% end
+% closematlabpool;
 disp('All finished!');
