@@ -31,9 +31,9 @@ function RStep1_RhythmClassifierApply()
 
 clear; clc
 ProjectName = 'sheng';
-SubjectName = 'grating12';  % 'grating03 to grating 16'
+SubjectName = 'grating11';  % 'grating03 to grating 16'
 RhythmMode = 'evoked';      % 'evoked' 'vectorlow' 'vectorhigh' 'single30'
-SensorMode = 'scouts';         % 'all' 'test7' 'batch' 'scouts'
+SensorMode = 'all';         % 'all' 'test7' 'batch' 'scouts'
 iitt = 'ii';                % 'ii' 'iitt' --- image-image-time-time mode off/on
 permutations = 'p100';       % 'p10'
 group = 'groupall';    	% 'groupall' 'grouptest' 'group1'

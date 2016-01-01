@@ -26,15 +26,15 @@ function [trial,param_out] = load_trials(brainstorm_db,subject,conditionsA,condi
 %============================================== 
 %   example:
 %
-%   brainstorm_db = '/dataslow/sheng/brainstorm_db/sheng/data';
-%   subject = 'grating05';
-%   conditionsA = {'1'};
-%   conditionsB = {'2'};
-%   ndx_trials = [];
-%   param.data_type = 'MEG';
-%   param.f_lowpass = 30;
-%   param.SensorMode = 'test7';
-%   param.SensorNames = {'MEG2113' 'MEG2111' 'MEG2112' 'MEG1931' 'MEG1932' 'MEG1933' 'MEG2121' };
+  brainstorm_db = '/dataslow/sheng/Project of Sheng/brainstorm_db/sheng/data';
+  subject = 'grating05';
+  conditionsA = {'1'};
+  conditionsB = {'2'};
+  ndx_trials = [];
+  param.data_type = 'MEG';
+  param.f_lowpass = 30;
+  param.SensorMode = 'test7';
+  param.SensorNames = {'MEG2113' 'MEG2111' 'MEG2112' 'MEG1931' 'MEG1932' 'MEG1933' 'MEG2121' };
 %
 %========================================
 %   Adapted from Mingtong
@@ -56,27 +56,27 @@ SensorNames = param.SensorNames;
 flag_B = str2num(conditionsB{1}); % whether to load the second condition trials
 
 %% find proper channels
-if ~strcmp(SensorMode([1:3]),'sco') % if it is not scout(source level)
-    
-    % get channel index (assume common channel structure per subject)
-    
-    channelfile = [brainstorm_db, '/', subject, '/@default_study/channel_vectorview306_acc1.mat'];
-    file_channel = load(channelfile);
-    channel_index = get_channel_index(file_channel,data_type);
-    
-    % select useful channels
-    if length(SensorNames)
-        channel_index = [];
-        for i_chose_sensor = 1:length(SensorNames)
-            for i=1:length(file_channel.Channel)
-                if strfind(file_channel.Channel(i).Name, SensorNames{i_chose_sensor})
-                    channel_index = [channel_index i];
-                    break;
-                end
-            end
-        end
-    end
-end
+% if ~strcmp(SensorMode([1:3]),'sco') % if it is not scout(source level)
+%     
+%     % get channel index (assume common channel structure per subject)
+%     
+%     channelfile = [brainstorm_db, '/', subject, '/@default_study/channel_vectorview306_acc1.mat'];
+%     file_channel = load(channelfile);
+%     channel_index = get_channel_index(file_channel,data_type);
+%     
+%     % select useful channels
+%     if length(SensorNames)
+%         channel_index = [];
+%         for i_chose_sensor = 1:length(SensorNames)
+%             for i=1:length(file_channel.Channel)
+%                 if strfind(file_channel.Channel(i).Name, SensorNames{i_chose_sensor})
+%                     channel_index = [channel_index i];
+%                     break;
+%                 end
+%             end
+%         end
+%     end
+% end
 
 %% get filenames
 n_conditions = length(conditionsA);
