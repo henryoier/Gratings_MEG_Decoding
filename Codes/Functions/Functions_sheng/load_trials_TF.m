@@ -47,7 +47,7 @@ switch RhythmMode
     case {'evoked'}
         files = dir([brainstorm_db '/' subject '/' condition '/data*average*.mat']);
     case {'induced'}
-        files = dir([brainstorm_db '/' subject '/' condition '/data*151229*.mat']);
+        files = dir([brainstorm_db '/' subject '/' condition '/data*1512*.mat']);
 end
 file_num = size(files, 1);
 

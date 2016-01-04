@@ -25,10 +25,10 @@ morlet_design(fc,FWHM_tc); %function return resolutions at different frequencies
 Time = -0.3:0.001:1.6;
 Time_num = size(Time, 2);
 
-for i_Rhythms = 1 :length(Rhythms)
+for i_Rhythms = 2:2
     RhythmMode = Rhythms{i_Rhythms};
     
-    for i_subject = 3:16
+    for i_subject = 10:16
         if i_subject == 4
             continue;
         end;
@@ -58,7 +58,7 @@ for i_Rhythms = 1 :length(Rhythms)
                 coeff = morlet_transform(trials{i_trial}, Time, Freqs, fc, FWHM_tc, 'n');
                 coeff = permute(coeff, [1 3 2]);
                 for i_Freq = 1:Freq_num
-                    sourcemap_temp =  sourcemap_temp + abs(InverseKernel * coeff(:,:,i_Freq));
+                    sourcemap_temp =  sourcemap_temp + abs(InverseKernel * coeff(:,:,i_Freq)).^2;
                 end
                 sourcemap_temp = sourcemap_temp / Freq_num;
                 sourcemap = sourcemap + sourcemap_temp;
