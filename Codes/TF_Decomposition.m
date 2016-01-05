@@ -12,7 +12,7 @@ ndx_trials = []; % Index of trials while reading parts of trials; Read all trial
 
 addpath(genpath('Functions'));
 
-Freqs = 50:2:58;
+Freqs = 24:2:32;
 Freq_num = size(Freqs ,2);
 
 HZ = [num2str(min(Freqs)) '-' num2str(max(Freqs)) 'Hz'];
@@ -28,7 +28,8 @@ Time_num = size(Time, 2);
 for i_Rhythms = 2:2
     RhythmMode = Rhythms{i_Rhythms};
     
-    for i_subject = 10:16
+    for i_subject = 3:16
+        
         if i_subject == 4
             continue;
         end;
