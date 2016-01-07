@@ -14,7 +14,7 @@ addpath(genpath('Functions'));
 
 Freqs = 24:2:32;
 Freq_num = size(Freqs ,2);
-
+InverseKernelType = 'wMNE';
 HZ = [num2str(min(Freqs)) '-' num2str(max(Freqs)) 'Hz'];
 
 %Morlet design (select temporal/spectral resolution by changing FWHM_tc)
@@ -36,14 +36,14 @@ for i_Rhythms = 2:2
         
         SubjectName = ['grating' num2str(i_subject,'%.2d')]
 
-        InverseKernel = load_inverse_kernel(brainstorm_db,SubjectName);
+        InverseKernel = load_inverse_kernel(brainstorm_db,SubjectName, InverseKernelType);
         cortex_num = size(InverseKernel, 1);
 
         for i_condition = 1:length(conditions)
             condition = num2str(i_condition);
 
             display(['Subject: ' SubjectName ' , Condition: ' condition]);
-            filename_tf = ['Timefreq_' SubjectName '_cond' num2str(i_condition) '_' RhythmMode '_' HZ '.mat'];
+            filename_tf = ['Timefreq_' SubjectName '_cond' num2str(i_condition) '_' RhythmMode '_' HZ '_' InverseKernelType '.mat'];
 
             [trials trial_num] = load_trials_TF(brainstorm_db, SubjectName, condition, RhythmMode);
 
