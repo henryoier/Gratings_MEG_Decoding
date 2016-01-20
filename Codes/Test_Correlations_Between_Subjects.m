@@ -53,7 +53,7 @@ end
 k=1;
 for s1 = 1:nsubj
     for s2 = 1:s1-1
-        CC1(:,:,k) = corr(Msq(:,:,s1), Msq(:,:,s2), 'type','Pearson'); %Msq(:,:,s) should be condxtime
+        CC1(:,:,k) = corr(Msq(:,:,s1), Msq(:,:,s2), 'type','Spearman'); %Msq(:,:,s) should be condxtime
         CC1(:,:,k+1) = CC1(:,:,k)';
         k = k+2;
         %k=k+1;
@@ -66,18 +66,11 @@ colormap(jet);
 axis equal; axis([min(Time) max(Time) min(Time) max(Time)])
 %caxis([YMIN YMAX]);
 
-% Draw the analytical area
-line('XData', [0.1, 0.15], 'YData', [0.9 0.9], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
-line('XData', [0.1, 0.15], 'YData', [0.95 0.95], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
-line('XData', [0.1 0.1], 'YData', [0.9, 0.95], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
-line('XData', [0.15 0.15], 'YData', [0.9, 0.95], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
-
-
 line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
 line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
 line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
 line('XData', [0.8 0.8], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
-h_title = title('Subjects between(analytical area)', 'FontSize', 15);
+h_title = title('Subjects between in evoked', 'FontSize', 15);
 set(gca,'FontSize',15);
 max_accuracy = max(max(mean(CC1, 3)));
 min_accuracy = min(min(mean(CC1, 3)));
@@ -91,7 +84,7 @@ if (flag_save)
     set(h,'PaperPositionMode','auto');
     set(gca,'FontSize',25);
     set(h_title,'FontSize', 20);
-    print(h,[jpg_file_name 'TT__Correlation_between(analytical area)' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.jpg'],'-djpeg','-r0');
+    print(h,[jpg_file_name 'TT__Correlation_between_Spearman' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.jpg'],'-djpeg','-r0');
     close(h);
 end
 
@@ -105,7 +98,7 @@ CC = permute(single(CC1), [3,1,2]);
 disp('statistc');
 
 % Statistic significant analysis
-    nperm = 100;
+    nperm = 1000;
     alpha = 0.05;
     cluster_th = 0.05;   %perform cluster size tests
     
@@ -124,18 +117,12 @@ h = figure;
 imagesc(Time,Time,TT.clusters.SignificantTimes); set(gca,'YDir','normal');
 axis equal; axis([min(Time) max(Time) min(Time) max(Time)])
 
-% Draw the analytical area
-line('XData', [0.05, 0.2], 'YData', [0.9 0.9], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
-line('XData', [0.05, 0.2], 'YData', [1.0 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
-line('XData', [0.05 0.05], 'YData', [0.9, 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
-line('XData', [0.2 0.2], 'YData', [0.9, 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','b')
-
 
 line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
 line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
 line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
 line('XData', [0.8 0.8], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
-h_title = title('Subjects between(analytical area)', 'FontSize', 15);
+h_title = title('Subjects between in evoked', 'FontSize', 15);
 set(gca,'FontSize',15);
 display([ 'Time-time significant time' ]);
 
@@ -145,7 +132,7 @@ if (flag_save)
     set(h,'PaperPositionMode','auto');
     set(gca,'FontSize',25);
     set(h_title,'FontSize', 20);
-    print(h,[jpg_file_name 'TT__Correlation_between_stime_larger.jpg'],'-djpeg','-r0');
+    print(h,[jpg_file_name 'TT__Correlation_between_stime_Spearman.jpg'],'-djpeg','-r0');
     close(h);
 end
 

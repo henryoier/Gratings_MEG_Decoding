@@ -1,7 +1,7 @@
 clear;clc; close all;
 addpath(genpath('Functions'));
 ProjectName = 'sheng';   %%%%%
-RhythmMode = {'evoked','isingle28','isingle56'}; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
+RhythmMode = {'evoked','ivectorlow','ivectorhigh'}; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
 SensorMode = 'all'; % 'batch' 'all' 'scouts'
 Compare_Field = 'C';
 file_location = [ '/dataslow/sheng/Project of Sheng/Results/' ProjectName ];
@@ -20,7 +20,7 @@ for condA = 2:2
             file_load = [ 'II_' SubjectName '_' RhythmMode{condA} '_' SensorMode '.mat'];
             load( [mat_location '/' file_load]);
             Original1(i_subject - 2,:,:,:) = Rhythm.AccyAll.matrix;
-        else
+       else 
             mat_location = [ file_location '/Mat_TFA_isingle/Accy_gratings_isingles'];
             SubjectName = ['grating' num2str(i_subject, '%0.2d')]; 
             file_load = [ 'ACCY_' SubjectName '_' RhythmMode{condA} '_' SensorMode '.mat'];

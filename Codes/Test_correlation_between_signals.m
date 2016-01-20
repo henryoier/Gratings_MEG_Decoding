@@ -9,7 +9,7 @@ cluster_th = '';
 
 Time = linspace(-0.3, 1.6, 1900);
 
-flag_save = 0;
+flag_save = 1;
 
 file_location = [ pwd '/Results/' ProjectName ];
 % mat_location = [ file_location '\Mat_' RhythmMode];
@@ -27,8 +27,8 @@ AccuracyTT1 = zeros(14,6,6,1901);
 AccuracyTT2 = zeros(14,6,6,1901);
 
 
-for condA = 1:1
-    for condB = 2:2
+for condA = 1:2
+    for condB = (condA + 1):3
 %for i_subject = [0]  SubjectName = '14gratings316'; %YMIN = 40; YMAX = 90;
 disp([RhythmMode{condA} ' versus ' RhythmMode{condB}]);
 for i_subject = [3:16]
@@ -84,7 +84,7 @@ if (flag_save)
     set(h,'PaperPositionMode','auto');
     set(gca,'FontSize',25);
     set(h_title,'FontSize', 20);
-    print(h,[jpg_file_name RhythmMode{condA} ' versus ' RhythmMode{condB} '.jpg'],'-djpeg','-r0');
+    print(h,[jpg_file_name RhythmMode{condA} ' versus ' RhythmMode{condB} 'Spearman.jpg'],'-djpeg','-r0');
     close(h);
 end
     
@@ -98,9 +98,9 @@ CC = permute(CC, [3 1 2]);
     nperm = 1000;
     alpha = 0.05;
     cluster_th = 0.05;   %perform cluster size tests
-    tail = 'onsided';
+
     
-    [TT.clusters.SignificantTimes,TT.clusters.clusters,TT.clusters.clustersize] = permutation_cluster_1sample_alld(CC, nperm, cluster_th, alpha, tail);
+    [TT.clusters.SignificantTimes,TT.clusters.clusters,TT.clusters.clustersize] = permutation_cluster_1sample_2dim(CC, nperm, cluster_th, alpha);
 %     % imagesc(SignificantTimes);set(gca,'YDir','normal');
 %     CC = reshape(CC,[14,1901*1901,1]);
 %     [TT.ttest.StatMap, TT.ttest.StatMapPv, TT.ttest.Perm, TT.ttest.FDR] = permutation_1sample(CC,nperm,alpha);
@@ -129,7 +129,7 @@ if (flag_save)
     set(h,'PaperPositionMode','auto');
     set(gca,'FontSize',25);
     set(h_title,'FontSize', 20);
-    print(h,[jpg_file_name 'TT__Correlation_stime_' RhythmMode{condA} '_versus_' RhythmMode{condB} '_0.05.jpg'],'-djpeg','-r0');
+    print(h,[jpg_file_name 'TT__Correlation_stime_' RhythmMode{condA} '_versus_' RhythmMode{condB} 'Spearman_0.05.jpg'],'-djpeg','-r0');
     close(h);
 end
 end
