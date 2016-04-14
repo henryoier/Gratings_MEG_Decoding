@@ -68,7 +68,7 @@ switch FileType
             Data_CC(1,:) = II_tmp.Rhythm.CC.mean;
             Data_CO(1,:) = II_tmp.Rhythm.CO.mean;
             Data_OO(1,:) = II_tmp.Rhythm.OO.mean;
-            
+          
             % the other files
             for i_file = 2:length(file_names)
                 II_tmp = load([file_location, '/ACCY_gratings_singles/', file_names(i_file).name]);

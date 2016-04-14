@@ -1,7 +1,7 @@
 % plot time-frequency decoding accuracy
 clear;clc;%close all;
 %cd C:\Users\Mingtong\OneDrive\Mingtong\RhythmClassifier
-ProjectName = 'fang02'; 
+ProjectName = 'sheng'; 
 
 SensorMode = 'all'; % 'batch' 'all'
 RhythmMode_pre = 'isingle';
@@ -22,7 +22,7 @@ for i_subject = [12] SubjectName = ['grating' num2str(i_subject, '%0.2d') ]; ACC
     
     %% generate
     file_location = [pwd '/Results/' ProjectName ];
-    mat_location = [ file_location '\Mat0_TFA_' RhythmMode_pre ];
+    mat_location = [ file_location '/Mat_TFA_' RhythmMode_pre ];
 %     mat_location = [ file_location '\Mat_grating12'];
     Freq = [single_number_begin : single_number_step : single_number_end];
     
@@ -97,6 +97,7 @@ for i_subject = [12] SubjectName = ['grating' num2str(i_subject, '%0.2d') ]; ACC
     plot_TFA = TFA.AccyAll.mean; 
     h = figure;imagesc(Time,Freq,plot_TFA);set(gca,'YDir','normal');
     axis([min(Time), max(Time), 12, 80]);
+    colormap(jet);
     colorbar; caxis([ACCYMIN ACCYMAX]);
     h_title = title([SubjectName '     Rhythm: ' RhythmMode_pre '     Accuracy     All conditons'], 'FontSize', 15);
     set(gca,'FontSize',15);
@@ -113,7 +114,7 @@ for i_subject = [12] SubjectName = ['grating' num2str(i_subject, '%0.2d') ]; ACC
         set(h,'PaperPositionMode','auto');
         set(gca,'FontSize',25);
         set(h_title,'FontSize', 20);
-        print(h,[ file_location '/Fig3_IITT/Fig0_TFA_' RhythmMode_pre '/' file_save '__' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.jpg'],'-djpeg','-r0');
+        print(h,[ file_location '/Fig_TFA_' RhythmMode_pre '/' file_save '__' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.jpg'],'-djpeg','-r0');
         close(h);
     end
     
@@ -138,7 +139,7 @@ for i_subject = [12] SubjectName = ['grating' num2str(i_subject, '%0.2d') ]; ACC
             set(h,'PaperPositionMode','auto');
             set(gca,'FontSize',25);
             set(h_title,'FontSize', 20);
-            print(h,[ file_location '/Fig3_IITT/Fig0_TFA_' RhythmMode_pre '/' file_save '__stime.jpg'],'-djpeg','-r0');
+            print(h,[ file_location '/Fig_TFA_' RhythmMode_pre '/' file_save '__stime.jpg'],'-djpeg','-r0');
             close(h);
         end
     end

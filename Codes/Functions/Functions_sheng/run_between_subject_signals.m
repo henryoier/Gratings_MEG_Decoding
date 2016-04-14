@@ -31,7 +31,7 @@ k=1;
 for s1 = 1:nsubj
     for s2 = 1:nsubj
         if s1 ~= s2
-            CC(:,:,k) = corr(Msq1(:,:,s1), Msq2(:,:,s2), 'type','Pearson'); %Msq(:,:,s) should be condxtime
+            CC(:,:,k) = corr(Msq1(:,:,s1), Msq2(:,:,s2), 'type','Spearman'); %Msq(:,:,s) should be condxtime
             k=k+1;
         end
     end

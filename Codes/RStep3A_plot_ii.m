@@ -5,18 +5,18 @@
 clear;clc; close all;
 addpath(genpath('Functions'));
 ProjectName = 'sheng';   %%%%%
-RhythmMode = 'single'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
+RhythmMode = 'ivectorhigh'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
 SensorMode = 'all'; % 'batch' 'all' 'scouts'
-iitt = 'ii';
+iitt = 'iitt';
 
 flag_save = 1;
-flag_all = 0;
+flag_all = 1;
 flag_weight = 0;
 flag_weight_movie = 0;
-flag_diff = 0;
-flag_Cardinal = 0;
+flag_diff = 1;
+flag_Cardinal = 1;
 flag_CO = 0;
-flag_C3 = 1;
+flag_C3 = 0;
 
 in_time = [210:30:901];
 flag_smooth = 1;
@@ -24,19 +24,20 @@ smooth_vector = ones(1,50)/50;
 % x = rand(1,100);xsm = conv(x,ones(1,10)/10,'same');figure;hold on;plot(x);plot(xsm,'r')
 stimulate_end_time = 0.8;
 
-for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 20; YMAX = 100; YMIN_CO = -25; YMAX_CO = 40;
+for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 30; YMAX = 100; YMIN_CO = -25; YMAX_CO = 40;
 %for i_subject = [3:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; YMIN = 20; YMAX = 100; YMIN_CO = -50; YMAX_CO = 60;
 
-for freq=2:2:80
+%for freq=2:2:80
     %% load file
     display(['Subject: ' SubjectName]);
     file_location = [pwd '/Results/' ProjectName];
-    mat_location = [ file_location '/Mat_TFA_' RhythmMode '/ACCY_' RhythmMode]; 
-    fig_location = [ file_location '/Fig_TFA_' RhythmMode];
-
+    mat_location = [ file_location '/Mat_' RhythmMode]; 
+    fig_location = [ file_location '/Fig_' RhythmMode];
+    save_location = [file_location '/Final_paper/'];
+    
     if strcmp(iitt, 'ii')
-        file_load = [ 'TFA_' SubjectName '_' RhythmMode num2str(freq) '_' SensorMode];
-        jpg_file_name = [ fig_location '/TFA_' SubjectName '_' RhythmMode num2str(freq) '_' SensorMode '___'];
+        file_load = [ 'ACCY_' SubjectName '_' RhythmMode '_' SensorMode];
+        jpg_file_name = [ fig_location '/ACCY_' SubjectName '_' RhythmMode '_' SensorMode '___'];
 %         jpg_file_name = [ file_location '/Fig3_IITT/Fig_' RhythmMode '/ACCY_' SubjectName '_' RhythmMode '_' SensorMode '___'];
     else
         file_load = [ 'II_' SubjectName '_' RhythmMode '_' SensorMode];
@@ -45,9 +46,7 @@ for freq=2:2:80
     end
     load( [mat_location '/' file_load]);
     Time = Rhythm.param.Time;
-    
-    
-    
+       
     %% mean of all conditions
     if flag_all
         % AccyAll
@@ -56,18 +55,14 @@ for freq=2:2:80
         Data{1}.color = 'k';
         title_text = [SubjectName '      ' RhythmMode '      ' SensorMode '      All conditions'];
         h = RStep3Z_subfunction_plot(Data, Time, YMIN, YMAX, stimulate_end_time,title_text,flag_smooth,smooth_vector,flag_save);
-        
-        [max_accuracy, max_index] = max(Data{1}.mean);
-        display([ 'AccyAll_max: ' num2str(max_accuracy,3) '% , ' num2str(max_index+min(Time)*1000) 'ms' ]);
-        
+     
         if (flag_save)
             %         saveas(h_AccyAll,[jpg_file_name 'AccyAll__' num2str(max_accuracy,3) '%_' num2str(max_index+min(Time)*1000) 'ms.tiff'])
-            print(h,[jpg_file_name 'AccyAll__' num2str(max_accuracy,3) '%_' num2str(max_index+min(Time)*1000) 'ms.jpg'],'-djpeg','-r0');
-            %close(h);
+            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '_all.fig']);
+            close(h);
         end
     end
-    
-    
+     
     if flag_weight
         
             % Weight
@@ -127,7 +122,7 @@ for freq=2:2:80
         cortex.vertices = cortex_grating12.Vertices;
         cortex.faces = cortex_grating12.Faces;
         sources = zeros(15002,1);
-        colorbar; caxis([-4 4]);
+        colorbar; colormap(jet);caxis([-4 4]);
         material dull
         lighting gouraud
         set(gcf,'color','white');
@@ -150,66 +145,67 @@ for freq=2:2:80
             ndx_source = find(in_time==i_time);
             patch(cortex,'FaceColor','interp','EdgeColor','none','FaceVertexCData',sources(:,ndx_source),'faceAlpha',1);
             title( [RhythmMode '      Time: ' num2str(i_time+min(Time)*1000) 'ms' ]  );
-            pause(0.0001);
+            %pause(0.0001);
+            pause;
         end
     end
     
     if (flag_diff)
-        %% matric figure
-        % figure at some time point
-        % clear clc
-        plot_time = max_index; % 100-min(Time)*1000 : 100 : 100-min(Time)*1000;
-        plot_Matrix = Rhythm.AccyAll.matrix;
-        % plot_matrix = Rhythm.Diff15.matrix;
-        
-        for i = 1:length(plot_time)
-            h = figure;imagesc(plot_Matrix(:,:,plot_time(i)));colorbar;caxis([YMIN YMAX])
-            [z1,z2] = size(plot_Matrix(:,:,plot_time(i)));
-            axis equal; axis([0.5 z1+0.5 0.5 z2+0.5]);
-            h_title = title([SubjectName '      ' RhythmMode '      ' SensorMode '      Time = ', num2str(plot_time(i)+min(Time)*1000), 'ms'], 'FontSize', 15 );
-            set(gca,'FontSize',15);
-            max_accuracy  = max( nonzeros( plot_Matrix(:,:,plot_time(i)) ) );
-            min_accuracy  = min( nonzeros( plot_Matrix(:,:,plot_time(i)) ) );
-            display([ 'Matrix: ' num2str(min_accuracy,3) '% ~ ' num2str(max_accuracy,3) '%']);
-            if (flag_save)
-%                 saveas(h,[jpg_file_name 'Matrix__' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.tiff'])
-                set(h,'Position',[1 1 1400 900]);
-                set(h,'PaperPositionMode','auto');
-                set(gca,'FontSize',25);
-                set(h_title,'FontSize', 20);
-                print(h,[jpg_file_name 'Matrix__' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.jpg'],'-djpeg','-r0');
-                close(h);
-            end
-        end
-        
-        
-        
-        %% two condition
-        CONDA = 1;
-        CONDB = 2;
-        condA = max(CONDA,CONDB); condB = min(CONDA,CONDB);
-        clear Data;
-        Data{1}.mean = squeeze( Rhythm.AccyAll.matrix(condA,condB,:) )';
-        Data{1}.color = 'k';
-        title_text = [SubjectName '      ' RhythmMode '      ' SensorMode '      Condition ' num2str(condB) ' & Condition ' num2str(condA)];
-        
-        h_TwoCond = RStep3Z_subfunction_plot(Data, Time, YMIN, YMAX, stimulate_end_time,title_text,flag_smooth,smooth_vector,flag_save);
-        
-        [max_accuracy_TwoCond, max_index_TwoCond] = max(Data{1}.mean);
-        if (flag_save)
-            %     saveas(h_TwoCond,[jpg_file_name 'TwoCond__' num2str(condB) '&' num2str(condA) '.tiff'])
-            close(h_TwoCond);
-        end
-        
-        
+%         %% matric figure
+%         % figure at some time point
+%         % clear clc
+%         plot_time = max_index; % 100-min(Time)*1000 : 100 : 100-min(Time)*1000;
+%         plot_Matrix = Rhythm.AccyAll.matrix;
+%         % plot_matrix = Rhythm.Diff15.matrix;
+%         
+%         for i = 1:length(plot_time)
+%             h = figure;imagesc(plot_Matrix(:,:,plot_time(i)));colorbar;caxis([YMIN YMAX])
+%             [z1,z2] = size(plot_Matrix(:,:,plot_time(i)));
+%             axis equal; axis([0.5 z1+0.5 0.5 z2+0.5]);
+%             h_title = title([SubjectName '      ' RhythmMode '      ' SensorMode '      Time = ', num2str(plot_time(i)+min(Time)*1000), 'ms'], 'FontSize', 15 );
+%             set(gca,'FontSize',15);
+%             max_accuracy  = max( nonzeros( plot_Matrix(:,:,plot_time(i)) ) );
+%             min_accuracy  = min( nonzeros( plot_Matrix(:,:,plot_time(i)) ) );
+%             display([ 'Matrix: ' num2str(min_accuracy,3) '% ~ ' num2str(max_accuracy,3) '%']);
+%             if (flag_save)
+% %                 saveas(h,[jpg_file_name 'Matrix__' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.tiff'])
+%                 set(h,'Position',[1 1 1400 900]);
+%                 set(h,'PaperPositionMode','auto');
+%                 set(gca,'FontSize',25);
+%                 set(h_title,'FontSize', 20);
+%                 saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '_diff.fig']);
+%                 close(h);
+%             end
+%         end
+%         
+%         
+%         
+%         %% two condition
+%         CONDA = 1;
+%         CONDB = 2;
+%         condA = max(CONDA,CONDB); condB = min(CONDA,CONDB);
+%         clear Data;
+%         Data{1}.mean = squeeze( Rhythm.AccyAll.matrix(condA,condB,:) )';
+%         Data{1}.color = 'k';
+%         title_text = [SubjectName '      ' RhythmMode '      ' SensorMode '      Condition ' num2str(condB) ' & Condition ' num2str(condA)];
+%         
+%         h_TwoCond = RStep3Z_subfunction_plot(Data, Time, YMIN, YMAX, stimulate_end_time,title_text,flag_smooth,smooth_vector,flag_save);
+%         
+%         [max_accuracy_TwoCond, max_index_TwoCond] = max(Data{1}.mean);
+%         if (flag_save)
+%             %     saveas(h_TwoCond,[jpg_file_name 'TwoCond__' num2str(condB) '&' num2str(condA) '.tiff'])
+%             close(h_TwoCond);
+%         end
+%         
+%         
         %% different orientation differences
         clear Data;
         Data{1} = Rhythm.Diff90;
         Data{1}.color = 'r-';
         Data{2} = Rhythm.Diff60;
-        Data{2}.color = 'b-.';
+        Data{2}.color = 'b-';
         Data{3} = Rhythm.Diff30;
-        Data{3}.color = 'g--';
+        Data{3}.color = 'g-';
         title_text = [SubjectName '      ' RhythmMode '      ' SensorMode '      Differences'];
         
         h = RStep3Z_subfunction_plot(Data, Time, YMIN, YMAX, stimulate_end_time,title_text,flag_smooth,smooth_vector,flag_save);
@@ -218,7 +214,8 @@ for freq=2:2:80
         
         if (flag_save)
 %             saveas(h_Diff,[jpg_file_name 'Diff.tiff']);
-            print(h,[jpg_file_name 'Diff.jpg'],'-djpeg','-r0');
+            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '_diff.fig']);
+            
             close(h);
         end
     end
@@ -238,7 +235,7 @@ for freq=2:2:80
         legend ('Cardinal', 'Oblique');
         if (flag_save)
 %             saveas(h,[jpg_file_name 'Cardinal.tiff'])
-            print(h,[jpg_file_name 'Cardinal.jpg'],'-djpeg','-r0');
+            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '_cardinal.fig']);
             close(h);
         end
         
@@ -265,7 +262,8 @@ for freq=2:2:80
         
         if (flag_save)
 %             saveas(h,[jpg_file_name 'Cardinal369.tiff'])
-            print(h,[jpg_file_name 'Cardinal369.jpg'],'-djpeg','-r0');
+            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '_cardinal369.fig']);
+            
             close(h);
         end
         
@@ -309,84 +307,9 @@ for freq=2:2:80
         legend ('CO90','CO60','CO30');
         
         if (flag_save)
-%           saveas(h,[jpg_file_name 'CO369.tiff'])
+%             saveas(h,[jpg_file_name 'CO369.tiff'])
             print(h,[jpg_file_name 'CO369.jpg'],'-djpeg','-r0');
             close(h);
         end
-        
-    end
-        %% CC, CO ,OO
-        if flag_C3
-        clear Data;
-        Data{1} = Rhythm.CC;
-        Data{1}.color = 'r-';
-        Data{2} = Rhythm.CO;
-        Data{2}.color = 'b-';
-        Data{3} = Rhythm.OO;
-        Data{3}.color = 'g-';
-        
-        title_text = [SubjectName ' ' RhythmMode ' at ' num2str(freq) 'Hz ' SensorMode ' CC,CO,OO'];
-        
-        h = RStep3Z_subfunction_plot(Data, Time, YMIN, YMAX, stimulate_end_time,title_text,flag_smooth,smooth_vector,flag_save);
-        
-        legend ('CC','CO','OO');
-        
-        if (flag_save)
-            %saveas(h,[jpg_file_name 'CC,CO,OO.tiff'])
-            print(h,[jpg_file_name 'CC,CO,OO.jpg'],'-djpeg','-r0');
-            close(h);
-        end
-        end
-        
-        if flag_CO
-        %% individual
-        clear Data;
-        counter = 0;
-        for i=2:6
-            for j=1:i-1
-                counter = counter + 1;
-                Temp.mean = squeeze(Rhythm.AccyAll.matrix(i,j,:));
-                Data{counter} = Temp;
-                Data{counter}.color = [0.05,0,0.05] * counter;
-                %Data{counter}.color = 'r';
-            end
-        end
-        
-        title_text = [SubjectName '      ' RhythmMode '      ' SensorMode '      15 pairs individual'];
-        
-        h = RStep3Z_subfunction_plot(Data, Time, YMIN, YMAX, stimulate_end_time,title_text,flag_smooth,smooth_vector,flag_save);
-        
-%         if (flag_save)
-%             %saveas(h,[jpg_file_name 'CC,CO,OO.tiff'])
-%             print(h,[jpg_file_name '15 pairs individual.jpg'],'-djpeg','-r0');
-%             close(h);
-%         end
-        %% CC, CO, OO respectively
-        
-        clear Data;
-        Data{1} = Rhythm.CC;
-        Data{1}.color = 'r';
-        Data{1}.stat_time =Rhythm.CC.stat_stime;
-        Data{2} = Rhythm.CO;
-        Data{2}.color = 'g';
-        Data{2}.stat_time =Rhythm.CO.stat_stime;
-        Data{3} = Rhythm.OO;
-        Data{3}.color = 'b';
-        Data{3}.stat_time =Rhythm.OO.stat_stime;
-   
-        
-        title_text = [SubjectName ' ' RhythmMode ' at ' num2str(freq) ' ' SensorMode ' CC,CO,OO individual'];
-        
-        h = RStep3Z_subfunction_plot(Data, Time, YMIN, YMAX, stimulate_end_time,title_text,flag_smooth,smooth_vector,flag_save);
-        
-        legend ('CC','CO','OO');
-        
-        if (flag_save)
-            %saveas(h,[jpg_file_name 'CC,CO,OO.tiff'])
-            print(h,[jpg_file_name 'CC,CO,OO individual.jpg'],'-djpeg','-r0');
-            close(h);
-        end
-        end
     end
 end
-

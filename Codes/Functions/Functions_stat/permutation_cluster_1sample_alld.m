@@ -34,6 +34,8 @@ function [SignificantVariables, clusters,clustersize,StatMapPermPV] = permutatio
 % Author: Dimitrios Pantazis, December 2015
 %
 
+parpool(10);
+
 %decide one tail (left) or twotail test
 if ~exist('tail') || strcmp(tail,'twosided') %if two tail t-test
     func = 'abs';
@@ -94,4 +96,5 @@ SignificantVariables = zeros(nvariable);
 SignificantVariables([clusters{clustersize>th}]) = 1;
 %figure;imagesc(SignificantVariables);set(gca,'YDir','normal');
 
+parpool close;
 

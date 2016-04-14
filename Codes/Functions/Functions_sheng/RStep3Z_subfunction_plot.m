@@ -1,14 +1,16 @@
 function h = RStep6_plot_f(Data, Time, YMIN, YMAX, stimulate_end_time,title_text,flag_smooth,smooth_vector,flag_save)
 
-h = figure; hold on; 
+h = figure('color', [1 1 1]); hold on; 
+
 text_size = 13;
 
-box on; grid on; 
+Plot = 101:1:1801;
 
 if (flag_save) 
     set(h,'Position',[1 1 1400 900]); 
     set(h,'PaperPositionMode','auto');
     text_size = 15;
+    set(gca,'linewidth', 2);
     % set(h_Diff, 'Position', get(0,'ScreenSize'));
     % set(h_Diff, 'PaperUnits', 'centimeters', 'PaperPosition', [0 0 32 18]);
 end
@@ -20,16 +22,14 @@ for i_plot = 1:plot_number
     plot_Data = Data{i_plot}.mean;
     
      % smooth accuracy data, not significant time data
-    if ( flag_smooth ) 
-        plot_Data = conv(plot_Data,smooth_vector,'same');
-    end
     
-    plot(Time,plot_Data,'Color',Data{i_plot}.color(1),'LineWidth',1.5);
+    plot(Time(Plot),plot_Data(Plot),Data{i_plot}.color,'LineWidth',2);
+    
 end
 
 % plot significant time
 for i_plot = 1:plot_number
-    if (isfield(Data{i_plot}, 'stat_stime') & length(Data{i_plot}.stat_stime) ~= 0)
+    if (isfield(Data{i_plot}, 'stat_stime'))
 %         if length(Data{i}.stat_stime)
         stat_stime = Data{i_plot}.stat_stime;
         
@@ -48,14 +48,15 @@ for i_plot = 1:plot_number
     end
 end
 
+Time = Time(Plot);
 axis([min(Time),max(Time),YMIN,YMAX]);
-if (YMIN>=0) line('XData', [min(Time),max(Time)], 'YData', [50 50], 'LineStyle', '-', 'LineWidth', 1.5, 'Color',[204/255 102/255 0]); end
-if (YMIN<0) line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color',[204/255 102/255 0]); end
-line('XData', [0 0], 'YData', [YMIN,YMAX], 'LineStyle', '-', 'LineWidth', 1.5, 'Color',[204/255 102/255 0])
-line('XData', [stimulate_end_time stimulate_end_time], 'YData', [YMIN,YMAX], 'LineStyle', '-', 'LineWidth', 1.5, 'Color',[204/255 102/255 0])
-title(title_text, 'FontSize', text_size)
+%if (YMIN>=0) line('XData', [min(Time),max(Time)], 'YData', [50 50], 'LineStyle', '-', 'LineWidth', 1.5, 'Color',[204/255 102/255 0]); end
+%if (YMIN<0) line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color',[204/255 102/255 0]); end
+line('XData', [0 0], 'YData', [YMIN,YMAX], 'LineStyle', '-', 'LineWidth', 2, 'Color',[100 149 237]/255);
+line('XData', [0.8 0.8], 'YData', [YMIN,YMAX], 'LineStyle', '-', 'LineWidth', 2, 'Color',[100 149 237]/255);
+%line('XData', [stimulate_end_time stimulate_end_time], 'YData', [YMIN,YMAX], 'LineStyle', '-', 'LineWidth', 1.5, 'Color',[204/255 102/255 0])
+%title(title_text, 'FontSize', text_size)
 set(gca,'FontSize',text_size);
-
 
 % % % 
 % close all;

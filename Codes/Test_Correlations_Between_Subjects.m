@@ -4,7 +4,7 @@
 clear;clc;close all;
 %cd F:\Mingtong\ToOnedrive\Scripts_RhythmClassifier
 ProjectName = 'sheng';   %%%%%
-RhythmMode = 'evoked'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
+RhythmMode = 'ivectorhigh'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
 SensorMode = 'all'; % 'batch' 'all'
 cluster_th = '';
 
@@ -70,7 +70,7 @@ line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidt
 line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
 line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
 line('XData', [0.8 0.8], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
-h_title = title('Subjects between in evoked', 'FontSize', 15);
+h_title = title('Subjects between in ivectorhigh', 'FontSize', 15);
 set(gca,'FontSize',15);
 max_accuracy = max(max(mean(CC1, 3)));
 min_accuracy = min(min(mean(CC1, 3)));
@@ -84,7 +84,7 @@ if (flag_save)
     set(h,'PaperPositionMode','auto');
     set(gca,'FontSize',25);
     set(h_title,'FontSize', 20);
-    print(h,[jpg_file_name 'TT__Correlation_between_Spearman' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.jpg'],'-djpeg','-r0');
+    print(h,[jpg_file_name 'TT_ivectorhigh_Correlation_between_Spearman' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.jpg'],'-djpeg','-r0');
     close(h);
 end
 
@@ -122,7 +122,7 @@ line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidt
 line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
 line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
 line('XData', [0.8 0.8], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
-h_title = title('Subjects between in evoked', 'FontSize', 15);
+h_title = title('Subjects between in ivectorhigh', 'FontSize', 15);
 set(gca,'FontSize',15);
 display([ 'Time-time significant time' ]);
 
@@ -132,8 +132,8 @@ if (flag_save)
     set(h,'PaperPositionMode','auto');
     set(gca,'FontSize',25);
     set(h_title,'FontSize', 20);
-    print(h,[jpg_file_name 'TT__Correlation_between_stime_Spearman.jpg'],'-djpeg','-r0');
+    print(h,[jpg_file_name 'TT_ivectorhigh_Correlation_between_stime_Spearman.jpg'],'-djpeg','-r0');
     close(h);
 end
 
-save([mat_location '\Correlation_between.mat']);
+save([mat_location '\Correlation_between_ivectorhigh.mat']);

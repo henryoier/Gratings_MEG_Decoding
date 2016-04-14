@@ -4,7 +4,7 @@
 clear;clc;close all;
 %cd F:\Mingtong\ToOnedrive\Scripts_RhythmClassifier
 ProjectName = 'sheng';   %%%%%
-RhythmMode = 'evoked'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
+RhythmMode = 'vectorlow'; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
 SensorMode = 'all'; % 'batch' 'all'
 cluster_th = '';
 
@@ -26,7 +26,7 @@ Baseline = 300;
         TT.mean = AccuracyTT;
     end
     
-    jpg_file_name = [ file_location '/Mat_' RhythmMode '/IITT_' file_load([4:end]) '___'];
+    jpg_file_name = [ file_location '/Fig_' RhythmMode '/IITT_' file_load([4:end]) '___'];
 %     jpg_file_name = [ file_location '/Fig3_IITT/Fig_' RhythmMode '/IITT_' file_load([4:end]) '___'];
     
     %%
@@ -36,12 +36,6 @@ Baseline = 300;
     colormap(jet);
     axis equal; axis([min(Time) max(Time) min(Time) max(Time)])
     %caxis([YMIN YMAX]);
-    
-    % Draw the analytical area
-    line('XData', [0.05, 0.2], 'YData', [0.9 0.9], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
-    line('XData', [0.05, 0.2], 'YData', [1.0 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
-    line('XData', [0.05 0.05], 'YData', [0.9, 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
-    line('XData', [0.2 0.2], 'YData', [0.9, 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
 
     line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
     line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
@@ -74,13 +68,7 @@ Baseline = 300;
         h = figure;
         imagesc(Time,Time,TT.stat_stime); set(gca,'YDir','normal');
         axis equal; axis([min(Time) max(Time) min(Time) max(Time)])
-        
-        % Draw the analytical area
-        line('XData', [0.05, 0.2], 'YData', [0.9 0.9], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
-        line('XData', [0.05, 0.2], 'YData', [1.0 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
-        line('XData', [0.05 0.05], 'YData', [0.9, 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
-        line('XData', [0.2 0.2], 'YData', [0.9, 1.0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
-       
+             
         line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
         line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
         line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 1.5, 'Color','r')
@@ -101,8 +89,4 @@ Baseline = 300;
     end
 end
 
-%% Bar chart
-h = figure;
-bar(Result, 'c');
-set(gca, 'xticklabel', [3:16]);
 

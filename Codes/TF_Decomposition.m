@@ -25,7 +25,7 @@ morlet_design(fc,FWHM_tc); %function return resolutions at different frequencies
 Time = -0.3:0.001:1.6;
 Time_num = size(Time, 2);
 
-for i_Rhythms = 2:2
+for i_Rhythms = 1:1
     RhythmMode = Rhythms{i_Rhythms};
     
     for i_subject = 3:16
