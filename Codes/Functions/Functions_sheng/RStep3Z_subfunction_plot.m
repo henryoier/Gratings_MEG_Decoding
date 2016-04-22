@@ -10,22 +10,22 @@ if (flag_save)
     set(h,'Position',[1 1 1400 900]); 
     set(h,'PaperPositionMode','auto');
     text_size = 15;
-    set(gca,'linewidth', 3);
+    set(gca,'linewidth', 5);
     % set(h_Diff, 'Position', get(0,'ScreenSize'));
     % set(h_Diff, 'PaperUnits', 'centimeters', 'PaperPosition', [0 0 32 18]);
 end
 
 plot_number = length(Data);
 
-line('XData', [0 0], 'YData', [YMIN,YMAX], 'LineStyle', '-', 'LineWidth', 3, 'Color',[100 149 237]/255);
-line('XData', [0.8 0.8], 'YData', [YMIN,YMAX], 'LineStyle', '-', 'LineWidth', 3, 'Color',[100 149 237]/255);
+line('XData', [0 0], 'YData', [YMIN + 1.65,YMAX], 'LineStyle', '-', 'LineWidth', 5, 'Color',[192 192 192]/255);
+line('XData', [0.8 0.8], 'YData', [YMIN + 1.65,YMAX], 'LineStyle', '-', 'LineWidth', 5, 'Color',[192 192 192]/255);
 
 for i_plot = 1:plot_number
     plot_Data = Data{i_plot}.mean;
     
      % smooth accuracy data, not significant time data
     
-    legend_line(i_plot,:) = plot(Time(Plot),plot_Data(Plot),Data{i_plot}.color,'LineWidth',3);
+    legend_line(i_plot,:) = plot(Time(Plot),plot_Data(Plot),Data{i_plot}.color,'LineWidth',5);
     
 end
 
@@ -36,9 +36,9 @@ for i_plot = 1:plot_number
         stat_stime = Data{i_plot}.stat_stime;
         
         if ( rem(plot_number,2) | (i_plot <= (plot_number)/2) )
-            line(Time(stat_stime),45 - i_plot*3,'Marker', 'o','Markersize', 2, 'color',Data{i_plot}.color(1));
+            line(Time(stat_stime),45 - i_plot*3,'Marker', 'o','Markersize', 3, 'color',Data{i_plot}.color(1));
         else
-            line( Time( stat_stime(1:8:size(stat_stime,2)) ),45 - i_plot*3,'Marker', 'o','Markersize', 2, 'color',Data{i_plot}.color(1));
+            plot( Time( stat_stime),ones(1, length(stat_stime)) * 45 - i_plot*3,Data{i_plot}.color, 'LineWidth', 3);
         end
         %
         % stat_ttest = Data.stat_ttest;
@@ -52,6 +52,9 @@ end
 
 Time = Time(Plot);
 axis([min(Time),max(Time),YMIN,YMAX]);
+set(gca,'xtick',-0.2:0.1:1.5);
+set(gca,'XTickLabel', {});
+set(gca,'YTickLabel', {});
 %if (YMIN>=0) line('XData', [min(Time),max(Time)], 'YData', [50 50], 'LineStyle', '-', 'LineWidth', 1.5, 'Color',[204/255 102/255 0]); end
 %if (YMIN<0) line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 1.5, 'Color',[204/255 102/255 0]); end
 %line('XData', [stimulate_end_time stimulate_end_time], 'YData', [YMIN,YMAX], 'LineStyle', '-', 'LineWidth', 1.5, 'Color',[204/255 102/255 0])

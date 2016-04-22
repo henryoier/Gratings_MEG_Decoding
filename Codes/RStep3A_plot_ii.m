@@ -60,8 +60,8 @@ for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 30; YMAX = 100; YMIN_
      
         if (flag_save)
             %         saveas(h_AccyAll,[jpg_file_name 'AccyAll__' num2str(max_accuracy,3) '%_' num2str(max_index+min(Time)*1000) 'ms.tiff'])
-            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '_all.fig']);
-            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '_all.jpg']);
+            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '-' Rhythm.param.stat.tail '_all.fig']);
+            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '-' Rhythm.param.stat.tail '_all.jpg']);
             close(h);
         end
     end
@@ -213,13 +213,13 @@ for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 30; YMAX = 100; YMIN_
         
         [h, legend_line] = RStep3Z_subfunction_plot(Data, Time, YMIN, YMAX, stimulate_end_time,title_text,flag_smooth,smooth_vector,flag_save);
         
-        l = legend (legend_line(1:3),'Diff90','Diff60','Diff30');
-        set(l, 'box', 'off','FontSize',23,'Position',[0.7 0.7 0.4 0.20]);
+        %l = legend (legend_line(1:3),'Diff90','Diff60','Diff30');
+        %set(l, 'box', 'off','FontSize',30,'Position',[0.65 0.7 0.6 0.2]);
         
         if (flag_save)
 %             saveas(h_Diff,[jpg_file_name 'Diff.tiff']);
-            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '_diff.fig']);
-            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '_diff.jpg']);
+            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '-' Rhythm.param.stat.tail '_diff.fig']);
+            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '-' Rhythm.param.stat.tail '_diff.jpg']);
             close(h);
         end
     end
@@ -236,13 +236,13 @@ for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 30; YMAX = 100; YMIN_
         
         [h, legend_line] = RStep3Z_subfunction_plot(Data, Time, YMIN, YMAX, stimulate_end_time,title_text,flag_smooth,smooth_vector,flag_save);
         
-        l = legend (legend_line(1:2),'Cardinal', 'Oblique');
-        set(l, 'box', 'off','FontSize',23,'Position',[0.7 0.7 0.4 0.20]);
+        %l = legend (legend_line(1:2),'Cardinal', 'Oblique');
+        %set(l, 'box', 'off','FontSize',30,'Position',[0.65 0.7 0.6 0.2]);
         
         if (flag_save)
 %             saveas(h,[jpg_file_name 'Cardinal.tiff'])
-            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '_cardinal.fig']);
-            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '_cardinal.jpg']);
+            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '-' Rhythm.param.stat.tail '_cardinal.fig']);
+            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '-' Rhythm.param.stat.tail '_cardinal.jpg']);
             close(h);
         end
         
@@ -267,12 +267,12 @@ for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 30; YMAX = 100; YMIN_
         
         legend ('Cardinal90','Cardinal60','Cardinal30','Oblique90','Oblique60','Oblique30');
         
-        if (flag_save)
+%         if (flag_save)
 %             saveas(h,[jpg_file_name 'Cardinal369.tiff'])
-            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '_cardinal369.fig']);
-            saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '_cardinal369.jpg']);        
-            close(h);
-        end
+%             saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '_cardinal369.fig']);
+%             saveas(h,[save_location RhythmMode '_' num2str(Rhythm.param.stat.alpha) '_' num2str(Rhythm.param.stat.cluster_th) '_cardinal369.jpg']);        
+%             close(h);
+%         end
         
     end
     

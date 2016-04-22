@@ -4,7 +4,7 @@ clear;clc;%close all;
 ProjectName = 'sheng'; 
 
 SensorMode = 'all'; % 'batch' 'all'
-RhythmMode_pre = 'isingle';
+RhythmModes = {'single','isingle','esingle'}; % % 'evoked' 'ivectorlow' 'ivectorhigh' 'isingle10' 'vectorlow'
 
 single_number_begin = 2;
 single_number_step = 2;
@@ -16,13 +16,20 @@ flag_one_only = 1;
 
 stimulate_end_time = 0.8;
 
-for i_subject = [12] SubjectName = ['grating' num2str(i_subject, '%0.2d') ]; ACCYMIN = 20; ACCYMAX = 100;
-% for i_subject = [0] SubjectName = '14gratings316'; ACCYMIN = 40; ACCYMAX = 90;
+plot_time = 101:1:1801;
+
+for i_mode = 1:3
+RhythmMode_pre = RhythmModes{i_mode};
+
+%for i_subject = [12] SubjectName = ['grating' num2str(i_subject, '%0.2d') ]; ACCYMIN = 20; ACCYMAX = 100;
+for i_subject = [0] SubjectName = '14gratings316'; ACCYMIN = 40; ACCYMAX = 90;
     disp(['Subject: ' SubjectName]);
     
     %% generate
-    file_location = [pwd '/Results/' ProjectName ];
+    file_location = [pwd '/../../Results/Gratings/' ProjectName ];
     mat_location = [ file_location '/Mat_TFA_' RhythmMode_pre ];
+    save_location = [file_location '/Final_paper/'];
+    
 %     mat_location = [ file_location '\Mat_grating12'];
     Freq = [single_number_begin : single_number_step : single_number_end];
     
@@ -83,7 +90,7 @@ for i_subject = [12] SubjectName = ['grating' num2str(i_subject, '%0.2d') ]; ACC
         file_save = [  'TFA_' SubjectName '_' RhythmMode_pre '_' SensorMode ];
         save([ mat_location '/' file_save], 'TFA');
     else
-        file_save = [  'TFA_' SubjectName '_' RhythmMode_pre '_' SensorMode ];
+        file_save = [  'TFA_' SubjectName '_' RhythmMode_pre '_' SensorMode '.mat'];
 %         file_save = [  'TFA_' SubjectName '_' RhythmMode_pre '_' SensorMode '_2-190'];
         load([ mat_location '/' file_save ]);
     end
@@ -91,30 +98,36 @@ for i_subject = [12] SubjectName = ['grating' num2str(i_subject, '%0.2d') ]; ACC
     
     
     %% plot time-frequency accuracy
-    Time = TFA.param.Time;
+    Time = TFA.param.Time(plot_time);
     
     %% AccyAll
-    plot_TFA = TFA.AccyAll.mean; 
-    h = figure;imagesc(Time,Freq,plot_TFA);set(gca,'YDir','normal');
-    axis([min(Time), max(Time), 12, 80]);
-    colormap(jet);
-    colorbar; caxis([ACCYMIN ACCYMAX]);
-    h_title = title([SubjectName '     Rhythm: ' RhythmMode_pre '     Accuracy     All conditons'], 'FontSize', 15);
-    set(gca,'FontSize',15);
-    line('XData', [0 0], 'YData', [0,500], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
-    line('XData', [stimulate_end_time stimulate_end_time], 'YData', [0,500], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
+    plot_TFA = TFA.AccyAll.mean(:, plot_time); 
+    h = figure('color', [1 1 1]);
     
-    max_accuracy = max(max(plot_TFA));
-    min_accuracy = min(min(plot_TFA));
-    display([ 'TFA: ' num2str(min_accuracy,3) '% ~ ' num2str(max_accuracy,3) '%']);
+    imagesc(Time,Freq,plot_TFA);set(gca,'YDir','normal');
+    %axis([min(Time), max(Time), 12, 80]);
+    colormap(jet);
+    %colorbar; 
+    caxis([ACCYMIN ACCYMAX]);
+    disp([num2str(ACCYMIN) '~' num2str(ACCYMAX)]);
+    %h_title = title([SubjectName '     Rhythm: ' RhythmMode_pre '     Accuracy     All conditons'], 'FontSize', 15);
+    line('XData', [0 0], 'YData', [1.65, 500], 'LineStyle', '-', 'LineWidth', 5, 'Color',[192 192 192]/255)
+    line('XData', [stimulate_end_time stimulate_end_time], 'YData', [1.65, 500], 'LineStyle', '-', 'LineWidth', 5, 'Color',[192 192 192]/255)
+    
+    set(gca,'xtick',-0.2:0.1:1.5);
+    set(gca,'XTickLabel', {});
+    set(gca,'YTickLabel', {});
+    
+    set(gca, 'LineWidth', 5);
+    box off;
     
     if (flag_save)
 %         saveas(h,[ file_location '/Fig3_IITT/' file_save '__' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.tiff'])
         set(h,'Position',[1 1 1400 900]);
         set(h,'PaperPositionMode','auto');
-        set(gca,'FontSize',25);
-        set(h_title,'FontSize', 20);
-        print(h,[ file_location '/Fig_TFA_' RhythmMode_pre '/' file_save '__' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.jpg'],'-djpeg','-r0');
+        saveas(h,[save_location 'TFA_' RhythmMode_pre '_' num2str(TFA.param.stat.alpha) '_' num2str(TFA.param.stat.cluster_th) '_' TFA.param.stat.tail '_all.fig']);
+        saveas(h,[save_location 'TFA_' RhythmMode_pre '_' num2str(TFA.param.stat.alpha) '_' num2str(TFA.param.stat.cluster_th) '_' TFA.param.stat.tail '_all.jpg']);
+         
         close(h);
     end
     
@@ -123,23 +136,32 @@ for i_subject = [12] SubjectName = ['grating' num2str(i_subject, '%0.2d') ]; ACC
     
     % AccyAll significant time
     if isfield(TFA.AccyAll, 'stat_stime')
-        plot_TFA = TFA.AccyAll.stat_stime;
-        h = figure;imagesc(Time,Freq,plot_TFA);set(gca,'YDir','normal');
-        %     colorbar; caxis([ACCYMIN ACCYMAX]);
-        h_title = title([SubjectName '     Rhythm: ' RhythmMode_pre '     Accuracy     All conditons'], 'FontSize', 15);
-        set(gca,'FontSize',15);
-        line('XData', [0 0], 'YData', [0,500], 'LineStyle', '-', 'LineWidth', 1.5, 'Color',[204/255 102/255 0])
-        line('XData', [stimulate_end_time stimulate_end_time], 'YData', [0,500], 'LineStyle', '-', 'LineWidth', 1.5, 'Color',[204/255 102/255 0])
+        plot_TFA = TFA.AccyAll.stat_stime(:,plot_time);
+        h = figure('color', [1 1 1]);
         
-        display([ 'TFA significant time.' ]);
+        imagesc(Time,Freq,plot_TFA);set(gca,'YDir','normal');
+        %     colorbar; caxis([ACCYMIN ACCYMAX]);
+        %h_title = title([SubjectName '     Rhythm: ' RhythmMode_pre '     Accuracy     All conditons'], 'FontSize', 15);
+        %set(gca,'FontSize',15);
+        line('XData', [0 0], 'YData', [1.65,500], 'LineStyle', '-', 'LineWidth', 5, 'Color',[192 192 192]/255)
+        line('XData', [stimulate_end_time stimulate_end_time], 'YData', [1.65,500], 'LineStyle', '-', 'LineWidth', 5, 'Color',[192 192 192]/255)
+        set(gca, 'LineWidth', 5);
+        
+        set(gca,'xtick',-0.2:0.1:1.5);
+        set(gca,'XTickLabel', {});
+        set(gca,'YTickLabel', {});
+    
+        set(gca, 'LineWidth', 5);
+        box off;
         
         if (flag_save)
             %         saveas(h,[ file_location '/Fig3_IITT/' file_save '__' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.tiff'])
             set(h,'Position',[1 1 1400 900]);
             set(h,'PaperPositionMode','auto');
             set(gca,'FontSize',25);
-            set(h_title,'FontSize', 20);
-            print(h,[ file_location '/Fig_TFA_' RhythmMode_pre '/' file_save '__stime.jpg'],'-djpeg','-r0');
+%            set(h_title,'FontSize', 20);
+            saveas(h,[save_location 'TFA_' RhythmMode_pre '_' num2str(TFA.param.stat.alpha) '_' num2str(TFA.param.stat.cluster_th) '_' TFA.param.stat.tail '_stat.fig']);
+            saveas(h,[save_location 'TFA_' RhythmMode_pre '_' num2str(TFA.param.stat.alpha) '_' num2str(TFA.param.stat.cluster_th) '_' TFA.param.stat.tail '_stat.jpg']);
             close(h);
         end
     end
@@ -177,4 +199,5 @@ for i_subject = [12] SubjectName = ['grating' num2str(i_subject, '%0.2d') ]; ACC
             end
         end
     end
+end
 end
