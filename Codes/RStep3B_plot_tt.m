@@ -37,26 +37,32 @@ Baseline = 200;
     TT.stat_stime = TT.stat_stime(plot_time, plot_time);
     
     Time = param.Time(plot_time);
-    h = figure;
+    h = figure('color', [1 1 1]);
     
-    imagesc(Time,Time,TT.mean); colorbar; set(gca,'YDir','normal');
+    imagesc(Time,Time,TT.mean); 
+    %colorbar; 
+    set(gca,'YDir','normal');
     colormap(jet);
     axis equal; axis([min(Time) max(Time) min(Time) max(Time)])
     caxis([YMIN YMAX]);
 
-    line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
-    line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
-    line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
-    line('XData', [0.8 0.8], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color',[204/255 102/255 0])
+    line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 5, 'Color',[192 192 192]/255)
+    line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 5, 'Color',[192 192 192]/255)
+    line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 5, 'Color',[192 192 192]/255)
+    line('XData', [0.8 0.8], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 5, 'Color',[192 192 192]/255)
     %h_title = title([SubjectName '      ' RhythmMode '      ' SensorMode '      Time-Time'], 'FontSize', 15);
-    set(gca,'LineWidth',3);
-    set(gca,'FontSize',15);
+    set(gca,'LineWidth', 5);
+    set(gca,'xtick',-0.2:0.1:1.5);
+    set(gca,'ytick',-0.2:0.1:1.5);
+    set(gca,'XTickLabel', {});
+    set(gca,'YTickLabel', {});
      
     %Result = [Result (mean(mean(TT.mean(Baseline + [100:150],Baseline + [900:950]) ,1),2) - min_accuracy)/(max_accuracy - min_accuracy)];
     
     if (flag_save)
         %         saveas(h_TT,[jpg_file_name 'TT__' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.tiff']);
-        set(h,'Position',[1 1 1400 900]);
+        set(h,'Position',[1 1 900 900]);
+        set(gca,'looseinset', [0.01 0.01 0.01 0.01]);
         set(h,'PaperPositionMode','auto');
         saveas(h,[save_location 'IITT_' RhythmMode '_' num2str(param.stat.alpha) '_' num2str(param.stat.cluster_th) '_' param.stat.tail '_all.fig']);
         saveas(h,[save_location 'IITT_' RhythmMode '_' num2str(param.stat.alpha) '_' num2str(param.stat.cluster_th) '_' param.stat.tail '_all.jpg']);
@@ -73,22 +79,25 @@ Baseline = 200;
     
     
     if isfield(TT,'stat_stime')
-        h = figure;
+        h = figure('color', [1 1 1]);
         imagesc(Time,Time,TT.stat_stime); set(gca,'YDir','normal');
         axis equal; axis([min(Time) max(Time) min(Time) max(Time)])
              
-        line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 3, 'Color','r')
-        line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 3, 'Color','r')
-        line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color','r')
-        line('XData', [0.8 0.8], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 3, 'Color','r')
+        line('XData', [min(Time),max(Time)], 'YData', [0 0], 'LineStyle', '-', 'LineWidth', 5, 'Color',[192 192 192]/255)
+        line('XData', [min(Time),max(Time)], 'YData', [0.8 0.8], 'LineStyle', '-', 'LineWidth', 5, 'Color',[192 192 192]/255)
+        line('XData', [0 0], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 5, 'Color',[192 192 192]/255)
+        line('XData', [0.8 0.8], 'YData', [min(Time),max(Time)], 'LineStyle', '-', 'LineWidth', 5, 'Color',[192 192 192]/255)
         %h_title = title([SubjectName '      ' RhythmMode '      ' SensorMode '      Time-Time'], 'FontSize', 15);
-        set(gca,'FontSize',15);
-        %display([ 'Time-time significant time' ]);
-        set(gca,'LineWidth',3);
+        set(gca,'LineWidth', 5);
+        set(gca,'xtick',-0.2:0.1:1.5);
+        set(gca,'ytick',-0.2:0.1:1.5);
+        set(gca,'XTickLabel', {});
+        set(gca,'YTickLabel', {});
         
         if (flag_save)
             %         saveas(h_TT,[jpg_file_name 'TT__' num2str(max_accuracy,3) '%_' num2str(min_accuracy,3) '%.tiff']);
-            set(h,'Position',[1 1 1400 900]);
+            set(h,'Position',[1 1 900 900]);
+            set(gca,'looseinset', [0.01 0.01 0.01 0.01]);
             set(h,'PaperPositionMode','auto');
 %             set(gca,'FontSize',25);
 %             set(h_title,'FontSize', 20);
