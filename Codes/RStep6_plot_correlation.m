@@ -8,35 +8,31 @@ RhythmModes = {'evoked','ivectorlow','ivectorhigh'}; % % 'evoked' 'ivectorlow' '
 SensorMode = 'all'; % 'batch' 'all'
 cluster_th = '';
 
-for i_mode = 1:3
-    RhythmMode = RhythmModes{i_mode};
+for condA = 1:3
+    for condB = 1:3
+        file_location = [ pwd '/../../Results/Gratings/' ProjectName ];
+        mat_location = [ file_location '/Final_paper/' ];
+        save_location = [file_location '/Final_paper/'];
+        flag_save = 1;
 
-    file_location = [ pwd '/../../Results/Gratings/' ProjectName ];
-    % mat_location = [ file_location '\Mat_' RhythmMode];
-    mat_location = [ file_location '/Mat_' RhythmMode ];
-    save_location = [file_location '/Final_paper/'];
-    flag_save = 1;
+        Result = [];
+        Time = -0.3:0.001:1.6;
+        plot_time = 101:1:1801;
+        Baseline = 200;
 
-    Result = [];
-    plot_time = 101:1:1801;
-    Baseline = 200;
+        YMIN = -0.1; YMAX = 0.25;
 
-     for i_subject = [0]  SubjectName = '14gratings316'; YMIN = 45; YMAX = 85;
-    %for i_subject = [3:16]  SubjectName = ['grating' num2str(i_subject, '%0.2d')]; YMIN = 20; YMAX = 100;
-
-        file_load = [ 'TT_' SubjectName '_' RhythmMode '_' SensorMode cluster_th '.mat'];
+        file_load = [ 'Project_' RhythmModes{condA} '_' RhythmModes{condB} '.mat'];
         load( [mat_location '/' file_load]);
-        if strcmp(param.SubjectName([1:7]),'grating')   % if individual subject
-            TT.mean = AccuracyTT;
-        end
-
-    %     jpg_file_name = [ file_location '/Fig3_IITT/Fig_' RhythmMode '/IITT_' file_load([4:end]) '___'];
-
+        
+        %TT.mean = squeeze(TT.matrix);
+        %TT.stat_stime = TT.clusters.SignificantTimes;
+        
         %%
         TT.mean = TT.mean(plot_time, plot_time);
         TT.stat_stime = TT.stat_stime(plot_time, plot_time);
 
-        Time = param.Time(plot_time);
+        Time = Time(plot_time);
         h = figure('color', [1 1 1]);
 
         imagesc(Time,Time,TT.mean); 
@@ -64,8 +60,8 @@ for i_mode = 1:3
             set(h,'Position',[1 1 900 900]);
             set(gca,'looseinset', [0.01 0.01 0.01 0.01]);
             set(h,'PaperPositionMode','auto');
-            saveas(h,[save_location 'IITT_' RhythmMode '_' num2str(param.stat.alpha) '_' num2str(param.stat.cluster_th) '_' param.stat.tail '_all.fig']);
-            saveas(h,[save_location 'IITT_' RhythmMode '_' num2str(param.stat.alpha) '_' num2str(param.stat.cluster_th) '_' param.stat.tail '_all.jpg']);
+            saveas(h,[save_location 'Project_' RhythmModes{condA} '_' RhythmModes{condB} '.fig']);
+            saveas(h,[save_location 'Project_' RhythmModes{condA} '_' RhythmModes{condB} '.jpg']);
 
             %set(gca,'FontSize',25);
             %set(h_title,'FontSize', 20);
@@ -101,8 +97,8 @@ for i_mode = 1:3
                 set(h,'PaperPositionMode','auto');
     %             set(gca,'FontSize',25);
     %             set(h_title,'FontSize', 20);
-                saveas(h,[save_location 'IITT_' RhythmMode '_' num2str(param.stat.alpha) '_' num2str(param.stat.cluster_th) '_' param.stat.tail '_stat.fig']);
-                saveas(h,[save_location 'IITT_' RhythmMode '_' num2str(param.stat.alpha) '_' num2str(param.stat.cluster_th) '_' param.stat.tail '_stat.jpg']);
+                saveas(h,[save_location 'Project_' RhythmModes{condA} '_' RhythmModes{condB} '_stat.fig']);
+                saveas(h,[save_location 'Project_' RhythmModes{condA} '_' RhythmModes{condB} '_stat.jpg']);
                 close(h);
             end
         end
